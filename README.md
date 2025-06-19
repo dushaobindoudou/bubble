@@ -48,7 +48,7 @@
 ### 安装依赖 | Installation
 ```bash
 # 克隆项目
-git clone https://github.com/liepin-labs/bubble-brawl.git
+git clone https://github.com/dushaobindoudou/bubble.git
 cd bubble-brawl
 
 # 安装依赖
