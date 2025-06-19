@@ -266,12 +266,6 @@ npx hardhat run scripts/deploy.js --network monad-testnet
 
 ---
 
-## 📞 联系我们 | Contact
-
-- **项目主页** - [GitHub Repository](https://github.com/liepin-labs/bubble-brawl)
-- **开发团队** - Liepin Labs
-- **邮箱** - dev@liepin-labs.com
-
 ---
 
 <div align="center">
@@ -279,7 +273,5 @@ npx hardhat run scripts/deploy.js --network monad-testnet
 **🫧 让我们一起在泡泡的世界里畅游吧！**
 
 *Let's have fun in the bubble world together!*
-
-Made with ❤️ by Liepin Labs
 
 </div>
