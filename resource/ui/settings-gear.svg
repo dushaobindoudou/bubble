@@ -1,0 +1,93 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 齿轮主体渐变 -->
+    <radialGradient id="gearGradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#F8F8F8;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#E0E0E0;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#C0C0C0;stop-opacity:0.7" />
+    </radialGradient>
+    
+    <!-- 齿轮高光 -->
+    <radialGradient id="gearHighlight" cx="0.3" cy="0.3" r="0.5">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- 中心孔渐变 -->
+    <radialGradient id="centerHole" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="0%" style="stop-color:#A0A0A0;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#808080;stop-opacity:0.6" />
+    </radialGradient>
+    
+    <!-- 阴影效果 -->
+    <radialGradient id="gearShadow" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="70%" style="stop-color:#000000;stop-opacity:0" />
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:0.3" />
+    </radialGradient>
+  </defs>
+  
+  <!-- 外层阴影 -->
+  <circle cx="50" cy="50" r="48" fill="url(#gearShadow)" />
+  
+  <!-- 齿轮主体 -->
+  <g transform="translate(50,50)">
+    <!-- 8个齿轮齿 -->
+    <g fill="url(#gearGradient)" stroke="#C0C0C0" stroke-width="0.5">
+      <!-- 上齿 -->
+      <rect x="-4" y="-38" width="8" height="12" rx="2" />
+      <!-- 右上齿 -->
+      <rect x="23" y="-30" width="12" height="8" rx="2" transform="rotate(45)" />
+      <!-- 右齿 -->
+      <rect x="26" y="-4" width="12" height="8" rx="2" />
+      <!-- 右下齿 -->
+      <rect x="23" y="22" width="12" height="8" rx="2" transform="rotate(-45)" />
+      <!-- 下齿 -->
+      <rect x="-4" y="26" width="8" height="12" rx="2" />
+      <!-- 左下齿 -->
+      <rect x="-35" y="22" width="12" height="8" rx="2" transform="rotate(45)" />
+      <!-- 左齿 -->
+      <rect x="-38" y="-4" width="12" height="8" rx="2" />
+      <!-- 左上齿 -->
+      <rect x="-35" y="-30" width="12" height="8" rx="2" transform="rotate(-45)" />
+    </g>
+    
+    <!-- 齿轮主圆 -->
+    <circle r="22" fill="url(#gearGradient)" stroke="#B0B0B0" stroke-width="1" />
+    
+    <!-- 中心孔 -->
+    <circle r="8" fill="url(#centerHole)" stroke="#808080" stroke-width="1" />
+    
+    <!-- 高光效果 -->
+    <ellipse cx="-8" cy="-8" rx="6" ry="4" fill="url(#gearHighlight)" />
+    
+    <!-- 齿轮纹理线条 -->
+    <g stroke="#D0D0D0" stroke-width="0.5" fill="none" opacity="0.6">
+      <circle r="18" />
+      <circle r="14" />
+      <!-- 辐射线 -->
+      <line x1="0" y1="-14" x2="0" y2="-10" />
+      <line x1="10" y1="-10" x2="7" y2="-7" />
+      <line x1="14" y1="0" x2="10" y2="0" />
+      <line x1="10" y1="10" x2="7" y2="7" />
+      <line x1="0" y1="14" x2="0" y2="10" />
+      <line x1="-10" y1="10" x2="-7" y2="7" />
+      <line x1="-14" y1="0" x2="-10" y2="0" />
+      <line x1="-10" y1="-10" x2="-7" y2="-7" />
+    </g>
+  </g>
+  
+  <!-- 旋转动画 -->
+  <animateTransform
+    attributeName="transform"
+    attributeType="XML"
+    type="rotate"
+    from="0 50 50"
+    to="360 50 50"
+    dur="8s"
+    repeatCount="indefinite"/>
+  
+  <!-- 悬停效果（可通过CSS控制） -->
+  <circle cx="50" cy="50" r="45" fill="none" stroke="#87CEEB" stroke-width="2" opacity="0" class="hover-effect">
+    <animate attributeName="opacity" values="0;0.5;0" dur="2s" repeatCount="indefinite" begin="indefinite" />
+  </circle>
+</svg> 

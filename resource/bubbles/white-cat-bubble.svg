@@ -1,0 +1,151 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 白猫主体渐变 -->
+    <radialGradient id="whiteCatGradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#F8F8FF;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#F0F0F0;stop-opacity:0.8" />
+    </radialGradient>
+    
+    <!-- 温柔光晕 -->
+    <radialGradient id="gentleGlow" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="60%" style="stop-color:#FFB6C1;stop-opacity:0" />
+      <stop offset="100%" style="stop-color:#FFB6C1;stop-opacity:0.4" />
+    </radialGradient>
+    
+    <!-- 高光渐变 -->
+    <radialGradient id="whiteHighlight" cx="0.3" cy="0.3" r="0.5">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- 云朵渐变 -->
+    <radialGradient id="cloudGradient" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.6" />
+      <stop offset="70%" style="stop-color:#F0F8FF;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#E6E6FA;stop-opacity:0.2" />
+    </radialGradient>
+    
+    <!-- 云朵图案 -->
+    <pattern id="cloudPattern" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+      <rect width="30" height="30" fill="none"/>
+      <g fill="#F0F8FF" opacity="0.3">
+        <circle cx="8" cy="8" r="3" />
+        <circle cx="12" cy="6" r="2" />
+        <circle cx="16" cy="8" r="2.5" />
+        <circle cx="22" cy="20" r="2" />
+        <circle cx="6" cy="22" r="1.5" />
+      </g>
+    </pattern>
+  </defs>
+  
+  <!-- 外层温柔光晕 -->
+  <circle cx="50" cy="50" r="48" fill="url(#gentleGlow)" />
+  
+  <!-- 泡泡主体 -->
+  <circle cx="50" cy="50" r="40" fill="url(#whiteCatGradient)" stroke="#E0E0E0" stroke-width="1" stroke-opacity="0.5" />
+  
+  <!-- 云朵装饰 -->
+  <circle cx="50" cy="50" r="35" fill="url(#cloudPattern)" opacity="0.6" />
+  
+  <!-- 柔和边框 -->
+  <circle cx="50" cy="50" r="38" fill="none" stroke="url(#cloudGradient)" stroke-width="2" opacity="0.4" />
+  
+  <!-- 猫咪脸部特征 -->
+  <g transform="translate(50,50)">
+    <!-- 猫耳朵 -->
+    <g fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1">
+      <path d="M-12,-25 L-18,-35 L-6,-32 Z" />
+      <path d="M12,-25 L6,-32 L18,-35 Z" />
+      <!-- 耳朵内侧（粉色） -->
+      <path d="M-12,-28 L-15,-32 L-9,-30 Z" fill="#FFB6C1" />
+      <path d="M12,-28 L9,-30 L15,-32 Z" fill="#FFB6C1" />
+    </g>
+    
+    <!-- 猫眼睛（蓝色） -->
+    <g>
+      <ellipse cx="-8" cy="-8" rx="4" ry="6" fill="#87CEEB" />
+      <ellipse cx="8" cy="-8" rx="4" ry="6" fill="#87CEEB" />
+      <!-- 瞳孔 -->
+      <ellipse cx="-8" cy="-8" rx="1.5" ry="4" fill="#000000" />
+      <ellipse cx="8" cy="-8" rx="1.5" ry="4" fill="#000000" />
+      <!-- 眼睛高光 -->
+      <circle cx="-7" cy="-10" r="1.5" fill="#FFFFFF" opacity="0.9" />
+      <circle cx="9" cy="-10" r="1.5" fill="#FFFFFF" opacity="0.9" />
+      <!-- 睫毛装饰 -->
+      <g stroke="#D3D3D3" stroke-width="1" fill="none" opacity="0.6">
+        <path d="M-12,-12 Q-10,-14 -8,-12" />
+        <path d="M8,-12 Q10,-14 12,-12" />
+      </g>
+    </g>
+    
+    <!-- 猫鼻子（粉色） -->
+    <path d="M0,0 L-2,3 L2,3 Z" fill="#FF69B4" />
+    
+    <!-- 猫嘴巴 -->
+    <g stroke="#D3D3D3" stroke-width="1.5" fill="none" opacity="0.8">
+      <path d="M0,3 Q-4,6 -8,4" />
+      <path d="M0,3 Q4,6 8,4" />
+    </g>
+    
+    <!-- 猫胡须 -->
+    <g stroke="#C0C0C0" stroke-width="1.5" fill="none" opacity="0.7">
+      <line x1="-20" y1="-2" x2="-12" y2="0" />
+      <line x1="-20" y1="2" x2="-12" y2="3" />
+      <line x1="12" y1="0" x2="20" y2="-2" />
+      <line x1="12" y1="3" x2="20" y2="2" />
+    </g>
+    
+    <!-- 脸颊腮红 -->
+    <ellipse cx="-15" cy="5" rx="3" ry="2" fill="#FFB6C1" opacity="0.4" />
+    <ellipse cx="15" cy="5" rx="3" ry="2" fill="#FFB6C1" opacity="0.4" />
+  </g>
+  
+  <!-- 高光效果 -->
+  <ellipse cx="40" cy="35" rx="10" ry="8" fill="url(#whiteHighlight)" />
+  
+  <!-- 纯洁粒子装饰 -->
+  <g fill="#F0F8FF" opacity="0.7">
+    <circle cx="25" cy="25" r="1.2">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="75" cy="30" r="1">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="3.5s" repeatCount="indefinite" begin="0.5s" />
+    </circle>
+    <circle cx="30" cy="75" r="1.5">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="2.8s" repeatCount="indefinite" begin="1s" />
+    </circle>
+    <circle cx="70" cy="70" r="0.8">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="3.2s" repeatCount="indefinite" begin="0.3s" />
+    </circle>
+  </g>
+  
+  <!-- 樱花花瓣装饰 -->
+  <g fill="#FFB6C1" opacity="0.6">
+    <g transform="translate(20,30)">
+      <path d="M0,0 Q2,-2 4,0 Q2,2 0,0 Q-2,-2 0,0">
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="4s" repeatCount="indefinite" />
+        <animateTransform attributeName="transform" type="rotate" values="0;360" dur="12s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform="translate(80,25)">
+      <path d="M0,0 Q1.5,-1.5 3,0 Q1.5,1.5 0,0 Q-1.5,-1.5 0,0">
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="3.5s" repeatCount="indefinite" begin="1s" />
+        <animateTransform attributeName="transform" type="rotate" values="360;0" dur="10s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform="translate(25,75)">
+      <path d="M0,0 Q1,-1 2,0 Q1,1 0,0 Q-1,-1 0,0">
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="3.8s" repeatCount="indefinite" begin="0.5s" />
+        <animateTransform attributeName="transform" type="rotate" values="0;360" dur="8s" repeatCount="indefinite" />
+      </path>
+    </g>
+  </g>
+  
+  <!-- 天使光环装饰 -->
+  <g transform="translate(50,20)" opacity="0.5">
+    <ellipse rx="15" ry="3" fill="none" stroke="#FFD700" stroke-width="2">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="5s" repeatCount="indefinite" />
+    </ellipse>
+  </g>
+</svg> 

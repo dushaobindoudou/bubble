@@ -1,0 +1,185 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 彩虹主体渐变 -->
+    <radialGradient id="rainbowGradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#FF0000;stop-opacity:0.9" />
+      <stop offset="14%" style="stop-color:#FF8C00;stop-opacity:0.9" />
+      <stop offset="28%" style="stop-color:#FFD700;stop-opacity:0.9" />
+      <stop offset="42%" style="stop-color:#32CD32;stop-opacity:0.9" />
+      <stop offset="56%" style="stop-color:#00BFFF;stop-opacity:0.9" />
+      <stop offset="70%" style="stop-color:#4169E1;stop-opacity:0.9" />
+      <stop offset="84%" style="stop-color:#8A2BE2;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#FF69B4;stop-opacity:0.8" />
+    </radialGradient>
+    
+    <!-- 流动彩虹效果 -->
+    <linearGradient id="flowingRainbow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF0000;stop-opacity:0.8">
+        <animate attributeName="stop-color" values="#FF0000;#FF8C00;#FFD700;#32CD32;#00BFFF;#4169E1;#8A2BE2;#FF69B4;#FF0000" dur="4s" repeatCount="indefinite" />
+      </stop>
+      <stop offset="25%" style="stop-color:#FFD700;stop-opacity:0.7">
+        <animate attributeName="stop-color" values="#FFD700;#32CD32;#00BFFF;#4169E1;#8A2BE2;#FF69B4;#FF0000;#FF8C00;#FFD700" dur="4s" repeatCount="indefinite" />
+      </stop>
+      <stop offset="50%" style="stop-color:#00BFFF;stop-opacity:0.6">
+        <animate attributeName="stop-color" values="#00BFFF;#4169E1;#8A2BE2;#FF69B4;#FF0000;#FF8C00;#FFD700;#32CD32;#00BFFF" dur="4s" repeatCount="indefinite" />
+      </stop>
+      <stop offset="75%" style="stop-color:#8A2BE2;stop-opacity:0.7">
+        <animate attributeName="stop-color" values="#8A2BE2;#FF69B4;#FF0000;#FF8C00;#FFD700;#32CD32;#00BFFF;#4169E1;#8A2BE2" dur="4s" repeatCount="indefinite" />
+      </stop>
+      <stop offset="100%" style="stop-color:#FF69B4;stop-opacity:0.8">
+        <animate attributeName="stop-color" values="#FF69B4;#FF0000;#FF8C00;#FFD700;#32CD32;#00BFFF;#4169E1;#8A2BE2;#FF69B4" dur="4s" repeatCount="indefinite" />
+      </stop>
+    </linearGradient>
+    
+    <!-- 彩虹光晕 -->
+    <radialGradient id="rainbowGlow" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="60%" style="stop-color:#FFFFFF;stop-opacity:0" />
+      <stop offset="100%" style="stop-color:#FF69B4;stop-opacity:0.5">
+        <animate attributeName="stop-color" values="#FF69B4;#FF0000;#FF8C00;#FFD700;#32CD32;#00BFFF;#4169E1;#8A2BE2;#FF69B4" dur="6s" repeatCount="indefinite" />
+      </stop>
+    </radialGradient>
+    
+    <!-- 高光渐变 -->
+    <radialGradient id="rainbowHighlight" cx="0.3" cy="0.3" r="0.5">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- 彩虹条纹图案 -->
+    <pattern id="rainbowStripes" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <rect width="20" height="20" fill="none"/>
+      <g opacity="0.4">
+        <rect x="0" y="0" width="20" height="3" fill="#FF0000" />
+        <rect x="0" y="3" width="20" height="3" fill="#FF8C00" />
+        <rect x="0" y="6" width="20" height="3" fill="#FFD700" />
+        <rect x="0" y="9" width="20" height="3" fill="#32CD32" />
+        <rect x="0" y="12" width="20" height="3" fill="#00BFFF" />
+        <rect x="0" y="15" width="20" height="3" fill="#4169E1" />
+        <rect x="0" y="18" width="20" height="2" fill="#8A2BE2" />
+      </g>
+      <animateTransform
+        attributeName="patternTransform"
+        attributeType="XML"
+        type="translate"
+        values="0,0;20,0;0,0"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </pattern>
+  </defs>
+  
+  <!-- 外层彩虹光晕 -->
+  <circle cx="50" cy="50" r="48" fill="url(#rainbowGlow)" />
+  
+  <!-- 泡泡主体 -->
+  <circle cx="50" cy="50" r="40" fill="url(#rainbowGradient)" stroke="#FF69B4" stroke-width="1.5" />
+  
+  <!-- 彩虹条纹装饰 -->
+  <circle cx="50" cy="50" r="35" fill="url(#rainbowStripes)" opacity="0.6" />
+  
+  <!-- 流动彩虹层 -->
+  <circle cx="50" cy="50" r="38" fill="url(#flowingRainbow)" opacity="0.7" />
+  
+  <!-- 彩虹边框 -->
+  <circle cx="50" cy="50" r="37" fill="none" stroke="url(#flowingRainbow)" stroke-width="2" opacity="0.8" />
+  
+  <!-- 中心笑脸 -->
+  <g transform="translate(50,50)" fill="#FFFFFF" opacity="0.9">
+    <!-- 眼睛 -->
+    <circle cx="-8" cy="-8" r="3" />
+    <circle cx="8" cy="-8" r="3" />
+    <circle cx="-8" cy="-8" r="1.5" fill="#000000" />
+    <circle cx="8" cy="-8" r="1.5" fill="#000000" />
+    <!-- 嘴巴 -->
+    <path d="M-8,5 Q0,12 8,5" stroke="#FFFFFF" stroke-width="2" fill="none" />
+  </g>
+  
+  <!-- 高光效果 -->
+  <ellipse cx="40" cy="35" rx="10" ry="8" fill="url(#rainbowHighlight)" />
+  
+  <!-- 彩虹粒子装饰 -->
+  <g>
+    <circle cx="25" cy="25" r="2" fill="#FF0000" opacity="0.8">
+      <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite" />
+      <animate attributeName="fill" values="#FF0000;#FF8C00;#FFD700;#32CD32;#00BFFF;#4169E1;#8A2BE2;#FF69B4;#FF0000" dur="3s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="75" cy="30" r="1.5" fill="#FFD700" opacity="0.8">
+      <animate attributeName="opacity" values="0.8;1;0.8" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+      <animate attributeName="fill" values="#FFD700;#32CD32;#00BFFF;#4169E1;#8A2BE2;#FF69B4;#FF0000;#FF8C00;#FFD700" dur="3s" repeatCount="indefinite" begin="0.5s" />
+    </circle>
+    <circle cx="30" cy="75" r="1.8" fill="#00BFFF" opacity="0.8">
+      <animate attributeName="opacity" values="0.8;1;0.8" dur="1.8s" repeatCount="indefinite" begin="1s" />
+      <animate attributeName="fill" values="#00BFFF;#4169E1;#8A2BE2;#FF69B4;#FF0000;#FF8C00;#FFD700;#32CD32;#00BFFF" dur="3s" repeatCount="indefinite" begin="1s" />
+    </circle>
+    <circle cx="70" cy="70" r="1.2" fill="#8A2BE2" opacity="0.8">
+      <animate attributeName="opacity" values="0.8;1;0.8" dur="2.2s" repeatCount="indefinite" begin="0.3s" />
+      <animate attributeName="fill" values="#8A2BE2;#FF69B4;#FF0000;#FF8C00;#FFD700;#32CD32;#00BFFF;#4169E1;#8A2BE2" dur="3s" repeatCount="indefinite" begin="0.3s" />
+    </circle>
+  </g>
+  
+  <!-- 彩虹星星装饰 -->
+  <g opacity="0.7">
+    <g transform="translate(20,45)">
+      <path d="M0,-4 L1,-1 L4,0 L1,1 L0,4 L-1,1 L-4,0 L-1,-1 Z" fill="#FFD700">
+        <animate attributeName="fill" values="#FFD700;#32CD32;#00BFFF;#4169E1;#8A2BE2;#FF69B4;#FF0000;#FF8C00;#FFD700" dur="4s" repeatCount="indefinite" />
+        <animateTransform attributeName="transform" type="rotate" values="0;360" dur="8s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform="translate(80,55)">
+      <path d="M0,-3 L0.8,-0.8 L3,0 L0.8,0.8 L0,3 L-0.8,0.8 L-3,0 L-0.8,-0.8 Z" fill="#FF69B4">
+        <animate attributeName="fill" values="#FF69B4;#FF0000;#FF8C00;#FFD700;#32CD32;#00BFFF;#4169E1;#8A2BE2;#FF69B4" dur="4s" repeatCount="indefinite" begin="1s" />
+        <animateTransform attributeName="transform" type="rotate" values="360;0" dur="6s" repeatCount="indefinite" />
+      </path>
+    </g>
+  </g>
+  
+  <!-- 彩虹尾迹 -->
+  <g opacity="0.5">
+    <path d="M15,50 Q25,40 35,50 Q45,60 55,50 Q65,40 75,50 Q85,60 95,50" 
+          stroke="url(#flowingRainbow)" stroke-width="3" fill="none">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" />
+    </path>
+    <path d="M50,15 Q40,25 50,35 Q60,45 50,55 Q40,65 50,75 Q60,85 50,95" 
+          stroke="url(#flowingRainbow)" stroke-width="3" fill="none">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" begin="1.5s" />
+    </path>
+  </g>
+  
+  <!-- 彩虹光芒 -->
+  <g transform="translate(50,50)" opacity="0.6">
+    <g stroke="url(#flowingRainbow)" stroke-width="2" fill="none">
+      <line x1="0" y1="-45" x2="0" y2="-40" />
+      <line x1="32" y1="-32" x2="28" y2="-28" />
+      <line x1="45" y1="0" x2="40" y2="0" />
+      <line x1="32" y1="32" x2="28" y2="28" />
+      <line x1="0" y1="45" x2="0" y2="40" />
+      <line x1="-32" y1="32" x2="-28" y2="28" />
+      <line x1="-45" y1="0" x2="-40" y2="0" />
+      <line x1="-32" y1="-32" x2="-28" y2="-28" />
+    </g>
+    
+    <!-- 光芒旋转动画 -->
+    <animateTransform
+      attributeName="transform"
+      attributeType="XML"
+      type="rotate"
+      values="0;360"
+      dur="10s"
+      repeatCount="indefinite"/>
+  </g>
+  
+  <!-- 魔法闪烁 -->
+  <g fill="#FFFFFF" opacity="0.8">
+    <circle cx="35" cy="40" r="1">
+      <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.5s" repeatCount="indefinite" />
+      <animate attributeName="r" values="1;2;1" dur="1.5s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="65" cy="35" r="0.8">
+      <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" repeatCount="indefinite" begin="0.5s" />
+      <animate attributeName="r" values="0.8;1.5;0.8" dur="2s" repeatCount="indefinite" begin="0.5s" />
+    </circle>
+    <circle cx="40" cy="65" r="1.2">
+      <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.8s" repeatCount="indefinite" begin="1s" />
+      <animate attributeName="r" values="1.2;2.2;1.2" dur="1.8s" repeatCount="indefinite" begin="1s" />
+    </circle>
+  </g>
+</svg> 

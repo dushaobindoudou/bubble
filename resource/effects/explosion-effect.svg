@@ -1,0 +1,138 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 爆炸中心渐变 -->
+    <radialGradient id="explosionCore" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#FFFF00;stop-opacity:0.9" />
+      <stop offset="70%" style="stop-color:#FF4500;stop-opacity:0.7" />
+      <stop offset="100%" style="stop-color:#FF0000;stop-opacity:0.3" />
+    </radialGradient>
+    
+    <!-- 火焰渐变 -->
+    <radialGradient id="flameGradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#FFFF00;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#FF6347;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#FF0000;stop-opacity:0.4" />
+    </radialGradient>
+    
+    <!-- 烟雾渐变 -->
+    <radialGradient id="smokeGradient" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="0%" style="stop-color:#D3D3D3;stop-opacity:0.6" />
+      <stop offset="70%" style="stop-color:#A9A9A9;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#696969;stop-opacity:0.2" />
+    </radialGradient>
+    
+    <!-- 冲击波渐变 -->
+    <radialGradient id="shockwaveGradient" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="80%" style="stop-color:#87CEEB;stop-opacity:0" />
+      <stop offset="90%" style="stop-color:#87CEEB;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#87CEEB;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- 冲击波效果 -->
+  <g class="shockwave-group">
+    <circle cx="60" cy="60" r="20" fill="none" stroke="url(#shockwaveGradient)" stroke-width="4" opacity="0">
+      <animate attributeName="r" values="20;80;120" dur="0.8s" begin="0s" />
+      <animate attributeName="opacity" values="0;0.8;0" dur="0.8s" begin="0s" />
+      <animate attributeName="stroke-width" values="4;2;0" dur="0.8s" begin="0s" />
+    </circle>
+    <circle cx="60" cy="60" r="15" fill="none" stroke="url(#shockwaveGradient)" stroke-width="3" opacity="0">
+      <animate attributeName="r" values="15;60;100" dur="0.6s" begin="0.1s" />
+      <animate attributeName="opacity" values="0;0.6;0" dur="0.6s" begin="0.1s" />
+      <animate attributeName="stroke-width" values="3;1;0" dur="0.6s" begin="0.1s" />
+    </circle>
+  </g>
+  
+  <!-- 爆炸中心 -->
+  <circle cx="60" cy="60" r="0" fill="url(#explosionCore)" class="explosion-core">
+    <animate attributeName="r" values="0;25;35;0" dur="0.5s" begin="0s" />
+    <animate attributeName="opacity" values="0;1;0.8;0" dur="0.5s" begin="0s" />
+  </circle>
+  
+  <!-- 火焰粒子 -->
+  <g class="flame-particles">
+    <!-- 主要火焰粒子 -->
+    <g fill="url(#flameGradient)">
+      <circle cx="60" cy="60" r="0" opacity="0">
+        <animate attributeName="r" values="0;8;12;0" dur="0.4s" begin="0s" />
+        <animate attributeName="opacity" values="0;0.8;0.4;0" dur="0.4s" begin="0s" />
+        <animateTransform attributeName="transform" type="translate" values="0,0;-15,-20;-25,-35" dur="0.4s" begin="0s" />
+      </circle>
+      <circle cx="60" cy="60" r="0" opacity="0">
+        <animate attributeName="r" values="0;6;10;0" dur="0.45s" begin="0.05s" />
+        <animate attributeName="opacity" values="0;0.7;0.3;0" dur="0.45s" begin="0.05s" />
+        <animateTransform attributeName="transform" type="translate" values="0,0;20,-15;35,-25" dur="0.45s" begin="0.05s" />
+      </circle>
+      <circle cx="60" cy="60" r="0" opacity="0">
+        <animate attributeName="r" values="0;7;11;0" dur="0.4s" begin="0.1s" />
+        <animate attributeName="opacity" values="0;0.8;0.4;0" dur="0.4s" begin="0.1s" />
+        <animateTransform attributeName="transform" type="translate" values="0,0;-10,25;-15,40" dur="0.4s" begin="0.1s" />
+      </circle>
+      <circle cx="60" cy="60" r="0" opacity="0">
+        <animate attributeName="r" values="0;5;9;0" dur="0.35s" begin="0.15s" />
+        <animate attributeName="opacity" values="0;0.6;0.3;0" dur="0.35s" begin="0.15s" />
+        <animateTransform attributeName="transform" type="translate" values="0,0;15,20;25,30" dur="0.35s" begin="0.15s" />
+      </circle>
+    </g>
+    
+    <!-- 次要火焰粒子 -->
+    <g fill="#FF6347" opacity="0.7">
+      <circle cx="60" cy="60" r="0" opacity="0">
+        <animate attributeName="r" values="0;4;6;0" dur="0.3s" begin="0.2s" />
+        <animate attributeName="opacity" values="0;0.7;0.3;0" dur="0.3s" begin="0.2s" />
+        <animateTransform attributeName="transform" type="translate" values="0,0;-25,10;-40,15" dur="0.3s" begin="0.2s" />
+      </circle>
+      <circle cx="60" cy="60" r="0" opacity="0">
+        <animate attributeName="r" values="0;3;5;0" dur="0.25s" begin="0.25s" />
+        <animate attributeName="opacity" values="0;0.6;0.2;0" dur="0.25s" begin="0.25s" />
+        <animateTransform attributeName="transform" type="translate" values="0,0;25,-10;40,-15" dur="0.25s" begin="0.25s" />
+      </circle>
+    </g>
+  </g>
+  
+  <!-- 烟雾效果 -->
+  <g class="smoke-particles" fill="url(#smokeGradient)">
+    <circle cx="60" cy="60" r="0" opacity="0">
+      <animate attributeName="r" values="0;15;25;30" dur="1.2s" begin="0.3s" />
+      <animate attributeName="opacity" values="0;0.6;0.3;0" dur="1.2s" begin="0.3s" />
+      <animateTransform attributeName="transform" type="translate" values="0,0;-10,-20;-15,-40" dur="1.2s" begin="0.3s" />
+    </circle>
+    <circle cx="60" cy="60" r="0" opacity="0">
+      <animate attributeName="r" values="0;12;20;25" dur="1s" begin="0.4s" />
+      <animate attributeName="opacity" values="0;0.5;0.2;0" dur="1s" begin="0.4s" />
+      <animateTransform attributeName="transform" type="translate" values="0,0;15,-15;25,-30" dur="1s" begin="0.4s" />
+    </circle>
+    <circle cx="60" cy="60" r="0" opacity="0">
+      <animate attributeName="r" values="0;10;18;22" dur="0.8s" begin="0.5s" />
+      <animate attributeName="opacity" values="0;0.4;0.2;0" dur="0.8s" begin="0.5s" />
+      <animateTransform attributeName="transform" type="translate" values="0,0;-5,20;-8,35" dur="0.8s" begin="0.5s" />
+    </circle>
+  </g>
+  
+  <!-- 碎片效果 -->
+  <g class="debris-particles" fill="#FFD700" opacity="0.8">
+    <rect x="58" y="58" width="4" height="4" rx="1" opacity="0">
+      <animate attributeName="opacity" values="0;1;0" dur="0.6s" begin="0.1s" />
+      <animateTransform attributeName="transform" type="translate" values="0,0;-30,-25" dur="0.6s" begin="0.1s" />
+      <animateTransform attributeName="transform" type="rotate" values="0;180" dur="0.6s" begin="0.1s" additive="sum" />
+    </rect>
+    <rect x="58" y="58" width="3" height="3" rx="1" opacity="0">
+      <animate attributeName="opacity" values="0;1;0" dur="0.5s" begin="0.15s" />
+      <animateTransform attributeName="transform" type="translate" values="0,0;35,-20" dur="0.5s" begin="0.15s" />
+      <animateTransform attributeName="transform" type="rotate" values="0;-150" dur="0.5s" begin="0.15s" additive="sum" />
+    </rect>
+    <rect x="58" y="58" width="2" height="2" rx="1" opacity="0">
+      <animate attributeName="opacity" values="0;1;0" dur="0.4s" begin="0.2s" />
+      <animateTransform attributeName="transform" type="translate" values="0,0;-20,30" dur="0.4s" begin="0.2s" />
+      <animateTransform attributeName="transform" type="rotate" values="0;120" dur="0.4s" begin="0.2s" additive="sum" />
+    </rect>
+  </g>
+  
+  <!-- 闪光效果 -->
+  <g class="flash-effect">
+    <circle cx="60" cy="60" r="40" fill="#FFFFFF" opacity="0">
+      <animate attributeName="opacity" values="0;0.8;0" dur="0.1s" begin="0s" />
+    </circle>
+  </g>
+</svg> 

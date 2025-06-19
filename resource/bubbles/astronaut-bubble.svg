@@ -1,0 +1,198 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 宇航头盔渐变 -->
+    <radialGradient id="helmetGradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#F0F8FF;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#E0E6FF;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#C0C0C0;stop-opacity:0.7" />
+    </radialGradient>
+    
+    <!-- 太空服渐变 -->
+    <radialGradient id="spacesuitGradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#F5F5F5;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#DCDCDC;stop-opacity:0.8" />
+    </radialGradient>
+    
+    <!-- 星空渐变 -->
+    <radialGradient id="spaceGradient" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="60%" style="stop-color:#191970;stop-opacity:0" />
+      <stop offset="100%" style="stop-color:#191970;stop-opacity:0.6" />
+    </radialGradient>
+    
+    <!-- 地球反射渐变 -->
+    <radialGradient id="earthReflectionGradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#4169E1;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#0000CD;stop-opacity:0.4" />
+    </radialGradient>
+    
+    <!-- 高光渐变 -->
+    <radialGradient id="astronautHighlight" cx="0.3" cy="0.3" r="0.5">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- 星星图案 -->
+    <pattern id="starPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <rect width="20" height="20" fill="none"/>
+      <g fill="#FFFFFF" opacity="0.6">
+        <circle cx="5" cy="5" r="0.5" />
+        <circle cx="15" cy="3" r="0.3" />
+        <circle cx="3" cy="15" r="0.4" />
+        <circle cx="17" cy="17" r="0.2" />
+        <circle cx="10" cy="12" r="0.3" />
+      </g>
+    </pattern>
+  </defs>
+  
+  <!-- 外层星空光晕 -->
+  <circle cx="50" cy="50" r="48" fill="url(#spaceGradient)" />
+  
+  <!-- 星空背景 -->
+  <circle cx="50" cy="50" r="42" fill="url(#starPattern)" opacity="0.4" />
+  
+  <!-- 泡泡主体（太空服） -->
+  <circle cx="50" cy="50" r="40" fill="url(#spacesuitGradient)" stroke="#C0C0C0" stroke-width="1.5" />
+  
+  <!-- 宇航头盔 -->
+  <circle cx="50" cy="45" r="25" fill="url(#helmetGradient)" stroke="#B0B0B0" stroke-width="1" opacity="0.8" />
+  
+  <!-- 头盔内部反射 -->
+  <circle cx="50" cy="45" r="22" fill="url(#earthReflectionGradient)" opacity="0.3" />
+  
+  <!-- 宇航员脸部 -->
+  <g transform="translate(50,45)">
+    <!-- 面部基础 -->
+    <ellipse rx="15" ry="18" fill="#FDBCB4" opacity="0.8" />
+    
+    <!-- 眼睛 -->
+    <g>
+      <ellipse cx="-6" cy="-5" rx="3" ry="4" fill="#FFFFFF" />
+      <ellipse cx="6" cy="-5" rx="3" ry="4" fill="#FFFFFF" />
+      <circle cx="-6" cy="-5" r="2" fill="#4169E1" />
+      <circle cx="6" cy="-5" r="2" fill="#4169E1" />
+      <circle cx="-6" cy="-6" r="1" fill="#000000" />
+      <circle cx="6" cy="-6" r="1" fill="#000000" />
+      <!-- 眼睛高光 -->
+      <circle cx="-5" cy="-7" r="0.5" fill="#FFFFFF" />
+      <circle cx="7" cy="-7" r="0.5" fill="#FFFFFF" />
+    </g>
+    
+    <!-- 鼻子 -->
+    <ellipse cy="0" rx="1" ry="2" fill="#F4A460" opacity="0.6" />
+    
+    <!-- 嘴巴 -->
+    <path d="M-3,5 Q0,8 3,5" stroke="#CD853F" stroke-width="1" fill="none" />
+  </g>
+  
+  <!-- 太空服细节 -->
+  <g transform="translate(50,50)">
+    <!-- 胸前控制面板 -->
+    <rect x="-8" y="10" width="16" height="12" rx="2" ry="2" 
+          fill="#B0C4DE" stroke="#708090" stroke-width="1" />
+    
+    <!-- 控制面板按钮 -->
+    <g fill="#FF4500">
+      <circle cx="-4" cy="14" r="1.5" />
+      <circle cx="0" cy="14" r="1.5" />
+      <circle cx="4" cy="14" r="1.5" />
+    </g>
+    
+    <!-- 控制面板屏幕 -->
+    <rect x="-6" y="17" width="12" height="3" rx="1" ry="1" 
+          fill="#000080" stroke="#4169E1" stroke-width="0.5" />
+    <rect x="-5" y="17.5" width="10" height="2" fill="#00BFFF" opacity="0.6" />
+    
+    <!-- 肩章装饰 -->
+    <g stroke="#FFD700" stroke-width="2" fill="none">
+      <path d="M-25,0 Q-20,-5 -15,0" />
+      <path d="M25,0 Q20,-5 15,0" />
+    </g>
+  </g>
+  
+  <!-- 头盔高光 -->
+  <ellipse cx="42" cy="35" rx="8" ry="6" fill="url(#astronautHighlight)" />
+  
+  <!-- 太空装饰元素 -->
+  <g fill="#FFFFFF" opacity="0.7">
+    <!-- 飞行的小星星 -->
+    <g transform="translate(25,25)">
+      <path d="M0,-3 L1,-1 L3,0 L1,1 L0,3 L-1,1 L-3,0 L-1,-1 Z">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" />
+        <animateTransform attributeName="transform" type="rotate" values="0;360" dur="8s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform="translate(75,30)">
+      <path d="M0,-2 L0.7,-0.7 L2,0 L0.7,0.7 L0,2 L-0.7,0.7 L-2,0 L-0.7,-0.7 Z">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+        <animateTransform attributeName="transform" type="rotate" values="360;0" dur="6s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform="translate(20,70)">
+      <path d="M0,-2.5 L0.8,-0.8 L2.5,0 L0.8,0.8 L0,2.5 L-0.8,0.8 L-2.5,0 L-0.8,-0.8 Z">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="1.8s" repeatCount="indefinite" begin="1s" />
+        <animateTransform attributeName="transform" type="rotate" values="0;360" dur="4s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform="translate(80,75)">
+      <path d="M0,-1.5 L0.5,-0.5 L1.5,0 L0.5,0.5 L0,1.5 L-0.5,0.5 L-1.5,0 L-0.5,-0.5 Z">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="2.2s" repeatCount="indefinite" begin="0.3s" />
+        <animateTransform attributeName="transform" type="rotate" values="360;0" dur="5s" repeatCount="indefinite" />
+      </path>
+    </g>
+  </g>
+  
+  <!-- 地球反射 -->
+  <g transform="translate(35,60)" opacity="0.4">
+    <ellipse rx="8" ry="6" fill="#4169E1" />
+    <ellipse rx="6" ry="4" fill="#228B22" />
+    <ellipse rx="4" ry="2" fill="#FFFFFF" opacity="0.6" />
+  </g>
+  
+  <!-- 太空尘埃粒子 -->
+  <g fill="#87CEEB" opacity="0.5">
+    <circle cx="30" cy="40" r="0.8">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" />
+      <animate attributeName="cy" values="40;35;40" dur="3s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="70" cy="35" r="0.6">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+      <animate attributeName="cy" values="35;30;35" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+    </circle>
+    <circle cx="25" cy="65" r="1">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="2.8s" repeatCount="indefinite" begin="1s" />
+      <animate attributeName="cy" values="65;60;65" dur="2.8s" repeatCount="indefinite" begin="1s" />
+    </circle>
+    <circle cx="75" cy="65" r="0.7">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3.2s" repeatCount="indefinite" begin="0.2s" />
+      <animate attributeName="cy" values="65;60;65" dur="3.2s" repeatCount="indefinite" begin="0.2s" />
+    </circle>
+  </g>
+  
+  <!-- 氧气管道 -->
+  <g stroke="#C0C0C0" stroke-width="2" fill="none" opacity="0.6">
+    <path d="M35,65 Q30,70 25,75" />
+    <path d="M65,65 Q70,70 75,75" />
+  </g>
+  
+  <!-- 国旗徽章 -->
+  <g transform="translate(65,55)">
+    <rect x="-3" y="-2" width="6" height="4" fill="#FF0000" />
+    <rect x="-3" y="-2" width="3" height="2" fill="#0000FF" />
+    <g fill="#FFFFFF" opacity="0.8">
+      <circle cx="-1.5" cy="-1" r="0.3" />
+      <circle cx="0" cy="-1.5" r="0.2" />
+      <circle cx="1.5" cy="-0.5" r="0.3" />
+    </g>
+  </g>
+  
+  <!-- 通信天线 -->
+  <g transform="translate(50,20)" stroke="#C0C0C0" stroke-width="1.5" fill="none" opacity="0.7">
+    <line x1="0" y1="0" x2="0" y2="-8" />
+    <circle r="2" opacity="0.3" />
+    <circle r="4" opacity="0.2">
+      <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite" />
+    </circle>
+  </g>
+</svg> 

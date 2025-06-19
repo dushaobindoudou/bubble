@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <!-- Meta Properties -->
+    <meta charset="UTF-8">
+    <title>🫧 Bubble Brawl - 泡泡大作战</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta name="description" content="泡泡大作战 - 多人在线竞技游戏，体验可爱泡泡世界的激烈对战！">
+    <meta name="keywords" content="泡泡大作战,多人游戏,在线游戏,竞技游戏,泡泡,Bubble Brawl">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css" />
+    <!-- Audio -->
+    <audio id="split_cell" src="audio/split.mp3"></audio>
+    <audio id="spawn_cell" src="audio/spawn.mp3"></audio>
+</head>
+<body>
+    <div id="gameAreaWrapper">
+        <div id="status"><span class="title">🏆 排行榜</span></div>
+        <div class="chatbox" id="chatbox">
+            <ul id="chatList" class="chat-list"></ul>
+            <input id="chatInput" type="text" class="chat-input" placeholder="在这里聊天..." maxlength="35" />
+        </div>
+        <div id="mobile">
+           <input type="image" id="split" class="split" src="img/split.png" alt="加速按钮">
+           <input type="image" id="feed" class="feed" src="img/feed.png" alt="喂食按钮">
+        </div>
+        <canvas tabindex="1" id="cvs"></canvas>
+    </div>
+    <div id="startMenuWrapper">
+        <div id="startMenu">
+            <p>🫧 泡泡大作战</p>
+            <input type="text" tabindex="0" autofocus placeholder="输入你的昵称" id="playerNameInput" maxlength="25" />
+            <b class="input-error">昵称只能包含字母、数字和下划线！</b>
+            <br />
+            <a onclick="document.getElementById('spawn_cell').play();"><button id="startButton">🚀 开始游戏</button></a>
+            <button id="spectateButton">👀 观战模式</button>
+            <button id="settingsButton">⚙️ 游戏设置</button>
+            <br />
+            <div id="settings">
+                <h3>🎮 游戏设置</h3>
+                <ul>
+                    <label><input id="visBord" type="checkbox">显示游戏边界</label>
+                    <label><input id="showMass" type="checkbox">显示泡泡体积</label>
+                    <br />
+                    <label><input id="continuity" type="checkbox">鼠标离开屏幕时继续移动</label>
+                    <br />
+                    <label><input id="roundFood" type="checkbox" checked>圆形能量点</label>
+                    <label><input id="darkMode" type="checkbox">夜间模式</label>
+                </ul>
+            </div>
+            <div id="instructions">
+                <h3>🎯 游戏玩法</h3>
+                <ul>
+                    <li>移动鼠标控制你的泡泡在屏幕上移动</li>
+                    <li>吃掉能量点和其他玩家来让你的泡泡变大</li>
+                    <li>泡泡的体积决定了你的实力和排名</li>
+                    <li>目标：成为最大的泡泡，吞噬所有对手！</li>
+                    <li>按住鼠标右键或空格键使用加速技能</li>
+                    <li>按W键或点击喂食按钮释放能量点</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- JS -->
+    <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

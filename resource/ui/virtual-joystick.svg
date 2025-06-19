@@ -1,0 +1,73 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 外圈背景渐变 -->
+    <radialGradient id="joystickBg" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="0%" style="stop-color:#F5F5F5;stop-opacity:0.3" />
+      <stop offset="70%" style="stop-color:#E0E0E0;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#CCCCCC;stop-opacity:0.8" />
+    </radialGradient>
+    
+    <!-- 内圈摇杆渐变 -->
+    <radialGradient id="joystickKnob" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#F0F0F0;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#D0D0D0;stop-opacity:0.7" />
+    </radialGradient>
+    
+    <!-- 高光效果 -->
+    <radialGradient id="joystickHighlight" cx="0.3" cy="0.3" r="0.5">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- 阴影效果 -->
+    <radialGradient id="joystickShadow" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="60%" style="stop-color:#000000;stop-opacity:0" />
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:0.2" />
+    </radialGradient>
+  </defs>
+  
+  <!-- 外层阴影 -->
+  <circle cx="60" cy="60" r="58" fill="url(#joystickShadow)" />
+  
+  <!-- 外圈背景 -->
+  <circle cx="60" cy="60" r="50" fill="url(#joystickBg)" stroke="#CCCCCC" stroke-width="1" />
+  
+  <!-- 外圈装饰线 -->
+  <circle cx="60" cy="60" r="45" fill="none" stroke="#E0E0E0" stroke-width="2" opacity="0.6" />
+  <circle cx="60" cy="60" r="35" fill="none" stroke="#E0E0E0" stroke-width="1" opacity="0.4" />
+  
+  <!-- 方向指示点 -->
+  <g fill="#CCCCCC" opacity="0.5">
+    <!-- 上 -->
+    <circle cx="60" cy="20" r="3" />
+    <!-- 右 -->
+    <circle cx="100" cy="60" r="3" />
+    <!-- 下 -->
+    <circle cx="60" cy="100" r="3" />
+    <!-- 左 -->
+    <circle cx="20" cy="60" r="3" />
+  </g>
+  
+  <!-- 中心摇杆 -->
+  <circle cx="60" cy="60" r="25" fill="url(#joystickKnob)" stroke="#D0D0D0" stroke-width="1.5" />
+  
+  <!-- 摇杆高光 -->
+  <ellipse cx="52" cy="52" rx="8" ry="6" fill="url(#joystickHighlight)" />
+  
+  <!-- 摇杆中心点 -->
+  <circle cx="60" cy="60" r="3" fill="#CCCCCC" opacity="0.6" />
+  
+  <!-- 摇杆纹理 -->
+  <g stroke="#E0E0E0" stroke-width="0.5" fill="none" opacity="0.4">
+    <circle cx="60" cy="60" r="20" />
+    <circle cx="60" cy="60" r="15" />
+    <circle cx="60" cy="60" r="10" />
+  </g>
+  
+  <!-- 触摸反馈效果（可通过CSS控制显示） -->
+  <circle cx="60" cy="60" r="50" fill="none" stroke="#87CEEB" stroke-width="2" opacity="0" class="touch-feedback">
+    <animate attributeName="r" values="25;50;25" dur="1s" repeatCount="indefinite" begin="indefinite" />
+    <animate attributeName="opacity" values="0.6;0;0.6" dur="1s" repeatCount="indefinite" begin="indefinite" />
+  </circle>
+</svg> 

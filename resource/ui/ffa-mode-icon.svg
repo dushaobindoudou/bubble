@@ -1,0 +1,232 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 主泡泡渐变 -->
+    <radialGradient id="mainBubbleGradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FF4757;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#FF3742;stop-opacity:0.8" />
+    </radialGradient>
+    
+    <!-- 竞争者泡泡渐变1 -->
+    <radialGradient id="competitor1Gradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#26D0CE;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#1DD1A1;stop-opacity:0.8" />
+    </radialGradient>
+    
+    <!-- 竞争者泡泡渐变2 -->
+    <radialGradient id="competitor2Gradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#FFA502;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FF9F43;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#FF6348;stop-opacity:0.8" />
+    </radialGradient>
+    
+    <!-- 竞争者泡泡渐变3 -->
+    <radialGradient id="competitor3Gradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#5F27CD;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#341F97;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#2F3542;stop-opacity:0.8" />
+    </radialGradient>
+    
+    <!-- 竞争者泡泡渐变4 -->
+    <radialGradient id="competitor4Gradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#00D2D3;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0FB9B1;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#006BA6;stop-opacity:0.8" />
+    </radialGradient>
+    
+    <!-- 战斗光晕 -->
+    <radialGradient id="battleGlow" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="60%" style="stop-color:#FF6B6B;stop-opacity:0" />
+      <stop offset="100%" style="stop-color:#FF6B6B;stop-opacity:0.6" />
+    </radialGradient>
+    
+    <!-- 高光渐变 -->
+    <radialGradient id="ffaHighlight" cx="0.3" cy="0.3" r="0.5">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- 竞争线条 -->
+    <linearGradient id="competitionLines" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#4ECDC4;stop-opacity:0.8" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 外层战斗光晕 -->
+  <circle cx="50" cy="50" r="48" fill="url(#battleGlow)" />
+  
+  <!-- 竞争连线背景 -->
+  <g stroke="url(#competitionLines)" stroke-width="2" fill="none" opacity="0.4">
+    <line x1="50" y1="50" x2="25" y2="25" />
+    <line x1="50" y1="50" x2="75" y2="25" />
+    <line x1="50" y1="50" x2="75" y2="75" />
+    <line x1="50" y1="50" x2="25" y2="75" />
+    <line x1="25" y1="25" x2="75" y2="75" />
+    <line x1="75" y1="25" x2="25" y2="75" />
+  </g>
+  
+  <!-- 主要泡泡（中心） -->
+  <circle cx="50" cy="50" r="18" fill="url(#mainBubbleGradient)" stroke="#FF3742" stroke-width="1.5" />
+  
+  <!-- 主泡泡表情 -->
+  <g transform="translate(50,50)" fill="#FFFFFF" opacity="0.9">
+    <!-- 愤怒眉毛 -->
+    <path d="M-8,-12 L-4,-8" stroke="#FFFFFF" stroke-width="2" />
+    <path d="M8,-12 L4,-8" stroke="#FFFFFF" stroke-width="2" />
+    <!-- 眼睛 -->
+    <circle cx="-6" cy="-5" r="2" />
+    <circle cx="6" cy="-5" r="2" />
+    <circle cx="-6" cy="-5" r="1" fill="#FF3742" />
+    <circle cx="6" cy="-5" r="1" fill="#FF3742" />
+    <!-- 愤怒嘴巴 -->
+    <path d="M-6,8 Q0,5 6,8" stroke="#FFFFFF" stroke-width="2" fill="none" />
+  </g>
+  
+  <!-- 竞争者泡泡1（左上） -->
+  <circle cx="25" cy="25" r="12" fill="url(#competitor1Gradient)" stroke="#1DD1A1" stroke-width="1" />
+  <g transform="translate(25,25)" fill="#FFFFFF" opacity="0.8">
+    <circle cx="-4" cy="-3" r="1.5" />
+    <circle cx="4" cy="-3" r="1.5" />
+    <circle cx="-4" cy="-3" r="0.7" fill="#1DD1A1" />
+    <circle cx="4" cy="-3" r="0.7" fill="#1DD1A1" />
+    <path d="M-4,5 Q0,7 4,5" stroke="#FFFFFF" stroke-width="1" fill="none" />
+  </g>
+  
+  <!-- 竞争者泡泡2（右上） -->
+  <circle cx="75" cy="25" r="12" fill="url(#competitor2Gradient)" stroke="#FF6348" stroke-width="1" />
+  <g transform="translate(75,25)" fill="#FFFFFF" opacity="0.8">
+    <circle cx="-4" cy="-3" r="1.5" />
+    <circle cx="4" cy="-3" r="1.5" />
+    <circle cx="-4" cy="-3" r="0.7" fill="#FF6348" />
+    <circle cx="4" cy="-3" r="0.7" fill="#FF6348" />
+    <path d="M-4,5 Q0,7 4,5" stroke="#FFFFFF" stroke-width="1" fill="none" />
+  </g>
+  
+  <!-- 竞争者泡泡3（右下） -->
+  <circle cx="75" cy="75" r="12" fill="url(#competitor3Gradient)" stroke="#2F3542" stroke-width="1" />
+  <g transform="translate(75,75)" fill="#FFFFFF" opacity="0.8">
+    <circle cx="-4" cy="-3" r="1.5" />
+    <circle cx="4" cy="-3" r="1.5" />
+    <circle cx="-4" cy="-3" r="0.7" fill="#2F3542" />
+    <circle cx="4" cy="-3" r="0.7" fill="#2F3542" />
+    <path d="M-4,5 Q0,7 4,5" stroke="#FFFFFF" stroke-width="1" fill="none" />
+  </g>
+  
+  <!-- 竞争者泡泡4（左下） -->
+  <circle cx="25" cy="75" r="12" fill="url(#competitor4Gradient)" stroke="#006BA6" stroke-width="1" />
+  <g transform="translate(25,75)" fill="#FFFFFF" opacity="0.8">
+    <circle cx="-4" cy="-3" r="1.5" />
+    <circle cx="4" cy="-3" r="1.5" />
+    <circle cx="-4" cy="-3" r="0.7" fill="#006BA6" />
+    <circle cx="4" cy="-3" r="0.7" fill="#006BA6" />
+    <path d="M-4,5 Q0,7 4,5" stroke="#FFFFFF" stroke-width="1" fill="none" />
+  </g>
+  
+  <!-- 主泡泡高光 -->
+  <ellipse cx="42" cy="42" rx="6" ry="5" fill="url(#ffaHighlight)" />
+  
+  <!-- 竞争指示箭头 -->
+  <g fill="#FFFFFF" opacity="0.7">
+    <!-- 指向中心的箭头 -->
+    <g transform="translate(37,37) rotate(45)">
+      <path d="M-3,0 L0,-2 L0,-1 L3,-1 L3,1 L0,1 L0,2 Z" />
+    </g>
+    <g transform="translate(63,37) rotate(135)">
+      <path d="M-3,0 L0,-2 L0,-1 L3,-1 L3,1 L0,1 L0,2 Z" />
+    </g>
+    <g transform="translate(63,63) rotate(225)">
+      <path d="M-3,0 L0,-2 L0,-1 L3,-1 L3,1 L0,1 L0,2 Z" />
+    </g>
+    <g transform="translate(37,63) rotate(315)">
+      <path d="M-3,0 L0,-2 L0,-1 L3,-1 L3,1 L0,1 L0,2 Z" />
+    </g>
+  </g>
+  
+  <!-- FFA标识 -->
+  <g transform="translate(50,15)">
+    <rect x="-15" y="-6" width="30" height="12" rx="6" ry="6" 
+          fill="#FF6B6B" stroke="#FF3742" stroke-width="1" opacity="0.9" />
+    <text x="0" y="2" text-anchor="middle" font-family="Comic Sans MS" font-size="8" 
+          font-weight="bold" fill="#FFFFFF">FFA</text>
+  </g>
+  
+  <!-- 战斗特效 -->
+  <g opacity="0.6">
+    <!-- 冲击波 -->
+    <circle cx="50" cy="50" r="25" fill="none" stroke="#FF6B6B" stroke-width="2">
+      <animate attributeName="r" values="25;35;25" dur="2s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="50" cy="50" r="30" fill="none" stroke="#4ECDC4" stroke-width="1.5">
+      <animate attributeName="r" values="30;40;30" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+      <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+    </circle>
+  </g>
+  
+  <!-- 竞争粒子 -->
+  <g fill="#FFFFFF" opacity="0.8">
+    <circle cx="40" cy="30" r="1">
+      <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1.5s" repeatCount="indefinite" />
+      <animate attributeName="r" values="1;2;1" dur="1.5s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="60" cy="30" r="0.8">
+      <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite" begin="0.5s" />
+      <animate attributeName="r" values="0.8;1.5;0.8" dur="2s" repeatCount="indefinite" begin="0.5s" />
+    </circle>
+    <circle cx="40" cy="70" r="1.2">
+      <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1.8s" repeatCount="indefinite" begin="1s" />
+      <animate attributeName="r" values="1.2;2.2;1.2" dur="1.8s" repeatCount="indefinite" begin="1s" />
+    </circle>
+    <circle cx="60" cy="70" r="0.9">
+      <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.2s" repeatCount="indefinite" begin="0.3s" />
+      <animate attributeName="r" values="0.9;1.8;0.9" dur="2.2s" repeatCount="indefinite" begin="0.3s" />
+    </circle>
+  </g>
+  
+  <!-- 胜利星星装饰 -->
+  <g fill="#FFD700" opacity="0.7">
+    <g transform="translate(15,15)">
+      <path d="M0,-3 L0.8,-0.8 L3,0 L0.8,0.8 L0,3 L-0.8,0.8 L-3,0 L-0.8,-0.8 Z">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" />
+        <animateTransform attributeName="transform" type="rotate" values="0;360" dur="8s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform="translate(85,15)">
+      <path d="M0,-2.5 L0.7,-0.7 L2.5,0 L0.7,0.7 L0,2.5 L-0.7,0.7 L-2.5,0 L-0.7,-0.7 Z">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="2.5s" repeatCount="indefinite" begin="1s" />
+        <animateTransform attributeName="transform" type="rotate" values="360;0" dur="6s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform="translate(15,85)">
+      <path d="M0,-2 L0.5,-0.5 L2,0 L0.5,0.5 L0,2 L-0.5,0.5 L-2,0 L-0.5,-0.5 Z">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="1.8s" repeatCount="indefinite" begin="0.5s" />
+        <animateTransform attributeName="transform" type="rotate" values="0;360" dur="4s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform="translate(85,85)">
+      <path d="M0,-2.2 L0.6,-0.6 L2.2,0 L0.6,0.6 L0,2.2 L-0.6,0.6 L-2.2,0 L-0.6,-0.6 Z">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="2.2s" repeatCount="indefinite" begin="0.8s" />
+        <animateTransform attributeName="transform" type="rotate" values="360;0" dur="5s" repeatCount="indefinite" />
+      </path>
+    </g>
+  </g>
+  
+  <!-- 动态能量线 -->
+  <g stroke="#FFFFFF" stroke-width="1" fill="none" opacity="0.5">
+    <path d="M25,25 Q50,40 75,25">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" />
+    </path>
+    <path d="M75,25 Q60,50 75,75">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" begin="0.75s" />
+    </path>
+    <path d="M75,75 Q50,60 25,75">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" begin="1.5s" />
+    </path>
+    <path d="M25,75 Q40,50 25,25">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" begin="2.25s" />
+    </path>
+  </g>
+</svg> 

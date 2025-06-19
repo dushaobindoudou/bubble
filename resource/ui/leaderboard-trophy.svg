@@ -1,0 +1,108 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 奖杯主体渐变 -->
+    <linearGradient id="trophyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#FFA500;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#FF8C00;stop-opacity:0.7" />
+    </linearGradient>
+    
+    <!-- 奖杯杯身渐变 -->
+    <radialGradient id="cupGradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#FFFF00;stop-opacity:0.8" />
+      <stop offset="70%" style="stop-color:#FFD700;stop-opacity:0.7" />
+      <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.6" />
+    </radialGradient>
+    
+    <!-- 底座渐变 -->
+    <linearGradient id="baseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#C0C0C0;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#A0A0A0;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#808080;stop-opacity:0.7" />
+    </linearGradient>
+    
+    <!-- 高光效果 */
+    <radialGradient id="trophyHighlight" cx="0.3" cy="0.3" r="0.5">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- 光晕效果 -->
+    <radialGradient id="trophyGlow" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="60%" style="stop-color:#FFD700;stop-opacity:0" />
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:0.4" />
+    </radialGradient>
+  </defs>
+  
+  <!-- 外层光晕 -->
+  <circle cx="50" cy="50" r="48" fill="url(#trophyGlow)" />
+  
+  <!-- 奖杯主体 -->
+  <g transform="translate(50,20)">
+    <!-- 奖杯杯身 -->
+    <path d="M-15,10 Q-15,5 -10,5 L10,5 Q15,5 15,10 L15,35 Q15,40 10,40 L-10,40 Q-15,40 -15,35 Z" 
+          fill="url(#cupGradient)" stroke="#FFA500" stroke-width="1" />
+    
+    <!-- 奖杯把手 -->
+    <g stroke="#FFD700" stroke-width="2" fill="none">
+      <!-- 左把手 -->
+      <path d="M-15,15 Q-25,15 -25,25 Q-25,35 -15,35" />
+      <!-- 右把手 -->
+      <path d="M15,15 Q25,15 25,25 Q25,35 15,35" />
+    </g>
+    
+    <!-- 奖杯颈部 -->
+    <rect x="-8" y="40" width="16" height="8" rx="2" ry="2" 
+          fill="url(#trophyGradient)" stroke="#FF8C00" stroke-width="1" />
+    
+    <!-- 奖杯底座 -->
+    <rect x="-20" y="48" width="40" height="12" rx="4" ry="4" 
+          fill="url(#baseGradient)" stroke="#808080" stroke-width="1" />
+    
+    <!-- 底座装饰线 -->
+    <rect x="-18" y="50" width="36" height="2" rx="1" ry="1" 
+          fill="#A0A0A0" opacity="0.6" />
+    <rect x="-18" y="56" width="36" height="2" rx="1" ry="1" 
+          fill="#A0A0A0" opacity="0.6" />
+    
+    <!-- 杯身高光 -->
+    <ellipse cx="-5" cy="20" rx="4" ry="8" fill="url(#trophyHighlight)" />
+    
+    <!-- 杯身装饰 -->
+    <g stroke="#FFFF00" stroke-width="1" fill="none" opacity="0.6">
+      <path d="M-10,15 Q0,12 10,15" />
+      <path d="M-10,25 Q0,22 10,25" />
+      <path d="M-10,35 Q0,32 10,35" />
+    </g>
+    
+    <!-- 奖杯顶部装饰 -->
+    <ellipse cx="0" cy="5" rx="12" ry="3" fill="#FFFF00" opacity="0.5" />
+  </g>
+  
+  <!-- 排名数字（可通过CSS动态更改） -->
+  <text x="50" y="85" text-anchor="middle" font-family="Comic Sans MS" font-size="16" font-weight="bold" fill="#FF8C00">
+    #1
+  </text>
+  
+  <!-- 闪烁星星装饰 -->
+  <g fill="#FFFF00" opacity="0.8">
+    <g transform="translate(25,25)">
+      <path d="M0,-8 L2,-2 L8,0 L2,2 L0,8 L-2,2 L-8,0 L-2,-2 Z">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="1.5s" repeatCount="indefinite" />
+        <animateTransform attributeName="transform" type="rotate" values="0;360" dur="4s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform="translate(75,30)">
+      <path d="M0,-6 L1.5,-1.5 L6,0 L1.5,1.5 L0,6 L-1.5,1.5 L-6,0 L-1.5,-1.5 Z">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite" begin="0.5s" />
+        <animateTransform attributeName="transform" type="rotate" values="360;0" dur="5s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform="translate(20,75)">
+      <path d="M0,-5 L1,-1 L5,0 L1,1 L0,5 L-1,1 L-5,0 L-1,-1 Z">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="1.8s" repeatCount="indefinite" begin="1s" />
+        <animateTransform attributeName="transform" type="rotate" values="0;360" dur="3s" repeatCount="indefinite" />
+      </path>
+    </g>
+  </g>
+</svg> 

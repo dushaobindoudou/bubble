@@ -1,0 +1,109 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 背景圆环渐变 -->
+    <radialGradient id="bgRingGradient" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="0%" style="stop-color:#F0F0F0;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#D0D0D0;stop-opacity:0.6" />
+    </radialGradient>
+    
+    <!-- 进度条渐变 -->
+    <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#4169E1;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#0000CD;stop-opacity:0.7" />
+    </linearGradient>
+    
+    <!-- 冷却完成渐变 -->
+    <linearGradient id="readyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#90EE90;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#32CD32;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#228B22;stop-opacity:0.7" />
+    </linearGradient>
+    
+    <!-- 中心图标背景 -->
+    <radialGradient id="centerBg" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#F0F0F0;stop-opacity:0.7" />
+    </radialGradient>
+    
+    <!-- 阴影效果 -->
+    <radialGradient id="shadowEffect" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="70%" style="stop-color:#000000;stop-opacity:0" />
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:0.2" />
+    </radialGradient>
+  </defs>
+  
+  <!-- 外层阴影 -->
+  <circle cx="50" cy="50" r="48" fill="url(#shadowEffect)" />
+  
+  <!-- 背景圆环 -->
+  <circle cx="50" cy="50" r="40" fill="none" stroke="url(#bgRingGradient)" stroke-width="8" />
+  
+  <!-- 进度圆环（冷却中状态，可通过CSS控制） -->
+  <circle cx="50" cy="50" r="40" fill="none" stroke="url(#progressGradient)" stroke-width="8" 
+          stroke-dasharray="251.2" stroke-dashoffset="125.6" 
+          stroke-linecap="round" class="progress-ring cooldown-active"
+          transform="rotate(-90 50 50)">
+    <!-- 冷却动画 -->
+    <animate attributeName="stroke-dashoffset" 
+             values="251.2;0" 
+             dur="10s" 
+             repeatCount="indefinite" 
+             begin="indefinite" 
+             class="cooldown-animation" />
+  </circle>
+  
+  <!-- 完成状态圆环（技能可用时显示） -->
+  <circle cx="50" cy="50" r="40" fill="none" stroke="url(#readyGradient)" stroke-width="8" 
+          stroke-dasharray="251.2" stroke-dashoffset="0" 
+          stroke-linecap="round" class="progress-ring skill-ready" 
+          transform="rotate(-90 50 50)" opacity="0">
+    <!-- 就绪脉冲动画 -->
+    <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" begin="indefinite" />
+  </circle>
+  
+  <!-- 中心背景 -->
+  <circle cx="50" cy="50" r="25" fill="url(#centerBg)" stroke="#E0E0E0" stroke-width="1" />
+  
+  <!-- 中心技能图标占位（可替换为具体技能图标） -->
+  <g transform="translate(50,50)" class="skill-icon">
+    <!-- 默认闪电图标 -->
+    <path d="M-8,-12 L8,-4 L-2,-4 L8,12 L-8,4 L2,4 Z" 
+          fill="#4169E1" opacity="0.7" class="icon-cooldown" />
+    
+    <!-- 就绪状态图标 -->
+    <path d="M-8,-12 L8,-4 L-2,-4 L8,12 L-8,4 L2,4 Z" 
+          fill="#32CD32" opacity="0" class="icon-ready">
+      <animate attributeName="opacity" values="0;1;0" dur="0.8s" repeatCount="indefinite" begin="indefinite" />
+    </path>
+  </g>
+  
+  <!-- 冷却时间文字（可通过JS动态更新） -->
+  <text x="50" y="75" text-anchor="middle" font-family="Comic Sans MS" font-size="12" 
+        font-weight="bold" fill="#666666" class="cooldown-text" opacity="0">
+    <tspan>5s</tspan>
+  </text>
+  
+  <!-- 就绪提示文字 -->
+  <text x="50" y="75" text-anchor="middle" font-family="Comic Sans MS" font-size="10" 
+        font-weight="bold" fill="#32CD32" class="ready-text" opacity="0">
+    <tspan>READY</tspan>
+    <animate attributeName="opacity" values="0;1;0" dur="1.2s" repeatCount="indefinite" begin="indefinite" />
+  </text>
+  
+  <!-- 装饰粒子效果 -->
+  <g fill="#87CEEB" opacity="0.6" class="particle-effects">
+    <circle cx="25" cy="25" r="1">
+      <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="75" cy="30" r="0.8">
+      <animate attributeName="opacity" values="0.6;0;0.6" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+    </circle>
+    <circle cx="30" cy="75" r="1.2">
+      <animate attributeName="opacity" values="0.6;0;0.6" dur="1.8s" repeatCount="indefinite" begin="1s" />
+    </circle>
+    <circle cx="70" cy="70" r="0.6">
+      <animate attributeName="opacity" values="0.6;0;0.6" dur="2.2s" repeatCount="indefinite" begin="0.3s" />
+    </circle>
+  </g>
+</svg> 
