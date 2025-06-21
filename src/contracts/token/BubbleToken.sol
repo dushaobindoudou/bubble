@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 /**
  * @title BubbleToken
@@ -26,10 +27,15 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
  * - 公开销售: 5% (50M)
  */
 contract BubbleToken is ERC20, ERC20Burnable, AccessControl, ReentrancyGuard {
+    using EnumerableSet for EnumerableSet.AddressSet;
+
     // 角色定义
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant GAME_REWARD_ROLE = keccak256("GAME_REWARD_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+
+    // 角色成员管理
+    EnumerableSet.AddressSet private _gameRewardRoleMembers;
 
     // 代币供应量常量
     uint256 public constant MAX_SUPPLY = 1_000_000_000 * 10**18;
@@ -57,11 +63,15 @@ contract BubbleToken is ERC20, ERC20Burnable, AccessControl, ReentrancyGuard {
     event DailyRewardLimitUpdated(uint256 oldLimit, uint256 newLimit);
     event TokensBurned(address indexed burner, uint256 amount);
 
+    // 角色管理事件
+    event GameRewardRoleGranted(address indexed account, address indexed admin);
+    event GameRewardRoleRevoked(address indexed account, address indexed admin);
+
     /**
      * @dev 构造函数
      * 初始化代币并设置管理员权限
      */
-    constructor() ERC20("Bubble Token", "BUB") {
+    constructor() ERC20("BubbleToken", "BUB") {
         // 设置管理员角色
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
@@ -180,6 +190,84 @@ contract BubbleToken is ERC20, ERC20Burnable, AccessControl, ReentrancyGuard {
         emit DailyRewardLimitUpdated(oldLimit, newLimit);
     }
 
+    // ============ GAME_REWARD_ROLE 管理功能 ============
+
+    /**
+     * @dev 授予游戏奖励角色
+     * @param account 要授予角色的地址
+     *
+     * 要求：
+     * - 调用者必须具有 DEFAULT_ADMIN_ROLE
+     * - 账户地址不能为零地址
+     * - 账户不能已经拥有该角色
+     */
+    function grantGameRewardRole(address account) external onlyRole(DEFAULT_ADMIN_ROLE) nonReentrant {
+        require(account != address(0), "BubbleToken: cannot grant role to zero address");
+        require(!hasRole(GAME_REWARD_ROLE, account), "BubbleToken: account already has game reward role");
+
+        // 授予角色（_grantRole 重写会自动处理枚举集合）
+        _grantRole(GAME_REWARD_ROLE, account);
+
+        emit GameRewardRoleGranted(account, msg.sender);
+    }
+
+    /**
+     * @dev 撤销游戏奖励角色
+     * @param account 要撤销角色的地址
+     *
+     * 要求：
+     * - 调用者必须具有 DEFAULT_ADMIN_ROLE
+     * - 账户地址不能为零地址
+     * - 账户必须拥有该角色
+     */
+    function revokeGameRewardRole(address account) external onlyRole(DEFAULT_ADMIN_ROLE) nonReentrant {
+        require(account != address(0), "BubbleToken: cannot revoke role from zero address");
+        require(hasRole(GAME_REWARD_ROLE, account), "BubbleToken: account does not have game reward role");
+
+        // 撤销角色（_revokeRole 重写会自动处理枚举集合）
+        _revokeRole(GAME_REWARD_ROLE, account);
+
+        emit GameRewardRoleRevoked(account, msg.sender);
+    }
+
+    /**
+     * @dev 检查地址是否拥有游戏奖励角色
+     * @param account 要检查的地址
+     * @return 如果地址拥有游戏奖励角色则返回 true
+     */
+    function hasGameRewardRole(address account) external view returns (bool) {
+        return hasRole(GAME_REWARD_ROLE, account);
+    }
+
+    /**
+     * @dev 获取所有拥有游戏奖励角色的地址
+     * @return 拥有游戏奖励角色的地址数组
+     */
+    function getGameRewardRoleMembers() external view returns (address[] memory) {
+        return _gameRewardRoleMembers.values();
+    }
+
+    /**
+     * @dev 获取拥有游戏奖励角色的地址数量
+     * @return 拥有游戏奖励角色的地址数量
+     */
+    function getGameRewardRoleMemberCount() external view returns (uint256) {
+        return _gameRewardRoleMembers.length();
+    }
+
+    /**
+     * @dev 获取指定索引的游戏奖励角色成员地址
+     * @param index 索引位置
+     * @return 指定索引位置的地址
+     *
+     * 要求：
+     * - 索引必须小于成员总数
+     */
+    function getGameRewardRoleMemberAt(uint256 index) external view returns (address) {
+        require(index < _gameRewardRoleMembers.length(), "BubbleToken: index out of bounds");
+        return _gameRewardRoleMembers.at(index);
+    }
+
     /**
      * @dev 销毁代币（重写以添加事件）
      * @param amount 销毁数量
@@ -285,6 +373,42 @@ contract BubbleToken is ERC20, ERC20Burnable, AccessControl, ReentrancyGuard {
             liquidityTokensReleased,
             publicSaleTokensReleased
         );
+    }
+
+    // ============ 内部角色管理重写 ============
+
+    /**
+     * @dev 重写角色授予函数以维护枚举集合
+     * @param role 角色标识符
+     * @param account 账户地址
+     * @return 是否成功授予角色
+     */
+    function _grantRole(bytes32 role, address account) internal virtual override returns (bool) {
+        bool result = super._grantRole(role, account);
+
+        // 如果是游戏奖励角色，添加到枚举集合
+        if (role == GAME_REWARD_ROLE && result) {
+            _gameRewardRoleMembers.add(account);
+        }
+
+        return result;
+    }
+
+    /**
+     * @dev 重写角色撤销函数以维护枚举集合
+     * @param role 角色标识符
+     * @param account 账户地址
+     * @return 是否成功撤销角色
+     */
+    function _revokeRole(bytes32 role, address account) internal virtual override returns (bool) {
+        bool result = super._revokeRole(role, account);
+
+        // 如果是游戏奖励角色，从枚举集合中移除
+        if (role == GAME_REWARD_ROLE && result) {
+            _gameRewardRoleMembers.remove(account);
+        }
+
+        return result;
     }
 
     /**

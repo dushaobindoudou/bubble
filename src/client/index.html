@@ -9,6 +9,7 @@
     <meta name="keywords" content="泡泡大作战,多人游戏,在线游戏,竞技游戏,泡泡,Bubble Brawl">
     <!-- CSS -->
     <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/auth.css" />
     <!-- Audio -->
     <audio id="split_cell" src="audio/split.mp3"></audio>
     <audio id="spawn_cell" src="audio/spawn.mp3"></audio>
@@ -62,7 +63,204 @@
         </div>
     </div>
     <!-- JS -->
-    <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
-    <script src="js/app.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="js/session-manager.js"></script>
+    <script src="js/cdn-loader.js"></script>
+    <script>
+        // Check authentication before loading game
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎮 Initializing Bubble Brawl Game...');
+
+            // Initialize session manager
+            window.sessionManager = new SessionManager();
+
+            // Check if user is authenticated
+            if (!window.sessionManager.hasValidSession()) {
+                console.log('❌ No valid session found, redirecting to login...');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const session = window.sessionManager.getCurrentSession();
+            console.log('✅ Valid session found:', {
+                address: session.address,
+                loginMethod: session.loginMethod,
+                isGuest: session.isGuest
+            });
+
+            // Load game components based on login method
+            if (session.isGuest) {
+                console.log('👤 Loading game in guest mode...');
+                loadGameComponents(false); // No Web3
+            } else {
+                console.log('🔗 Loading game with Web3 support...');
+                loadGameComponents(true); // With Web3
+            }
+        });
+
+        function loadGameComponents(withWeb3) {
+            if (withWeb3) {
+                // Load ethers.js and Web3 components
+                window.cdnLoader.loadEthers().then(() => {
+                    console.log('🫧 Ethers.js loaded successfully, initializing Web3...');
+
+                    const scripts = [
+                        'js/web3-config.js',
+                        'js/web3-auth.js',
+                        'js/auth-ui.js',
+                        'js/web3-integration.js',
+                        'js/app.js'
+                    ];
+
+                    loadScriptsSequentially(scripts).then(() => {
+                        console.log('🎉 All Web3 components loaded successfully!');
+                        initializeGame(true);
+                    }).catch(error => {
+                        console.error('❌ Failed to load Web3 components:', error);
+                        // Fallback to guest mode
+                        loadGameComponents(false);
+                    });
+
+                }).catch(error => {
+                    console.error('❌ Failed to load ethers.js:', error);
+                    // Fallback to guest mode
+                    loadGameComponents(false);
+                });
+            } else {
+                // Load only game components (no Web3)
+                console.log('🎮 Loading game in traditional mode...');
+                loadScriptsSequentially(['js/app.js']).then(() => {
+                    console.log('🎉 Game loaded successfully!');
+                    initializeGame(false);
+                }).catch(error => {
+                    console.error('❌ Failed to load game:', error);
+                    showGameLoadError();
+                });
+            }
+        }
+
+        function loadScriptsSequentially(scripts) {
+            return scripts.reduce((promise, script) => {
+                return promise.then(() => {
+                    return new Promise((resolve, reject) => {
+                        const scriptElement = document.createElement('script');
+                        scriptElement.src = script;
+                        scriptElement.onload = resolve;
+                        scriptElement.onerror = reject;
+                        document.head.appendChild(scriptElement);
+                    });
+                });
+            }, Promise.resolve());
+        }
+
+        function initializeGame(hasWeb3) {
+            // Set player name based on session
+            const session = window.sessionManager.getCurrentSession();
+            const playerNameInput = document.getElementById('playerNameInput');
+
+            if (playerNameInput) {
+                if (session.isGuest) {
+                    playerNameInput.value = `Guest_${Date.now().toString().slice(-4)}`;
+                } else if (session.address) {
+                    playerNameInput.value = `Player_${session.address.slice(-4)}`;
+                }
+            }
+
+            // Add logout functionality
+            addLogoutButton();
+
+            console.log(`🎮 Game initialized with ${hasWeb3 ? 'Web3' : 'traditional'} mode`);
+        }
+
+        function addLogoutButton() {
+            const startMenu = document.getElementById('startMenu');
+            if (startMenu) {
+                const logoutBtn = document.createElement('button');
+                logoutBtn.innerHTML = '🚪 退出登录';
+                logoutBtn.style.cssText = `
+                    background: linear-gradient(135deg, #ff4757, #c44569);
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin: 10px 0;
+                    transition: all 0.2s;
+                    width: 200px;
+                `;
+
+                logoutBtn.addEventListener('click', () => {
+                    if (confirm('确定要退出登录吗？')) {
+                        window.sessionManager.clearSession();
+                        window.location.href = 'login.html';
+                    }
+                });
+
+                logoutBtn.addEventListener('mouseenter', () => {
+                    logoutBtn.style.transform = 'translateY(-2px)';
+                    logoutBtn.style.boxShadow = '0 8px 20px rgba(255, 71, 87, 0.4)';
+                });
+
+                logoutBtn.addEventListener('mouseleave', () => {
+                    logoutBtn.style.transform = 'translateY(0)';
+                    logoutBtn.style.boxShadow = 'none';
+                });
+
+                startMenu.appendChild(logoutBtn);
+            }
+        }
+
+        function showGameLoadError() {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                font-family: Arial, sans-serif;
+                text-align: center;
+                padding: 20px;
+                box-sizing: border-box;
+            `;
+
+            errorDiv.innerHTML = `
+                <div>
+                    <h2>🚫 游戏加载失败</h2>
+                    <p>无法加载游戏组件，请检查网络连接。</p>
+                    <button onclick="location.reload()" style="
+                        background: #007bff;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        font-size: 16px;
+                        margin: 10px;
+                    ">🔄 刷新页面</button>
+                    <button onclick="window.location.href='login.html'" style="
+                        background: #6c757d;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        font-size: 16px;
+                        margin: 10px;
+                    ">🔙 返回登录</button>
+                </div>
+            `;
+
+            document.body.appendChild(errorDiv);
+        }
+    </script>
 </body>
 </html>

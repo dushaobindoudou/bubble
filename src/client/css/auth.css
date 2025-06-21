@@ -1,0 +1,495 @@
+/**
+ * Authentication UI Styles for Bubble Brawl
+ * Modern, responsive design with bubble theme
+ */
+
+/* Modal Base Styles */
+.auth-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.auth-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+}
+
+.auth-modal-content {
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Header Styles */
+.auth-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 24px 0;
+    color: white;
+}
+
+.auth-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.auth-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 24px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.auth-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Step Container */
+.auth-step {
+    display: none;
+    padding: 24px;
+}
+
+.auth-step.active {
+    display: block;
+}
+
+.auth-step-content {
+    color: white;
+}
+
+.auth-step h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.auth-description {
+    margin: 0 0 24px;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+/* Wallet Options */
+.wallet-options {
+    margin-bottom: 24px;
+}
+
+.wallet-option {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.wallet-option:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.wallet-option:last-child {
+    margin-bottom: 0;
+}
+
+.wallet-icon {
+    font-size: 24px;
+    margin-right: 16px;
+    min-width: 32px;
+}
+
+.wallet-info {
+    flex: 1;
+}
+
+.wallet-name {
+    display: block;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.wallet-desc {
+    display: block;
+    opacity: 0.8;
+    font-size: 14px;
+}
+
+.wallet-arrow {
+    font-size: 18px;
+    opacity: 0.7;
+}
+
+/* Divider */
+.auth-divider {
+    text-align: center;
+    margin: 24px 0;
+    position: relative;
+}
+
+.auth-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.auth-divider span {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 0 16px;
+    opacity: 0.8;
+    font-size: 14px;
+}
+
+/* Buttons */
+.primary-btn, .secondary-btn, .social-auth-btn {
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+}
+
+.secondary-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.social-auth-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.social-auth-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.social-icon {
+    font-size: 18px;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Network Info */
+.network-info {
+    text-align: center;
+}
+
+.network-details {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.network-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.network-item:last-child {
+    margin-bottom: 0;
+}
+
+.network-item .label {
+    opacity: 0.8;
+}
+
+.network-item .value {
+    font-weight: 600;
+    font-family: monospace;
+}
+
+/* Success/Error Icons */
+.success-icon, .error-icon {
+    font-size: 48px;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+/* User Info */
+.user-info {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.user-address {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.user-address .label {
+    opacity: 0.8;
+    margin-right: 8px;
+}
+
+.user-address .address {
+    font-family: monospace;
+    font-weight: 600;
+    flex: 1;
+}
+
+.copy-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: background 0.2s;
+}
+
+.copy-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.user-balances {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 12px;
+}
+
+.balance-item {
+    text-align: center;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.balance-label {
+    display: block;
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 4px;
+}
+
+.balance-value {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Help Content */
+.help-content {
+    text-align: left;
+}
+
+.help-section {
+    margin-bottom: 20px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.help-section h4 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.help-section p {
+    margin: 0;
+    line-height: 1.5;
+    opacity: 0.9;
+}
+
+.help-section a {
+    color: #ffd700;
+    text-decoration: none;
+}
+
+.help-section a:hover {
+    text-decoration: underline;
+}
+
+/* Auth Help */
+.auth-help {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-help p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.auth-help a {
+    color: #ffd700;
+    text-decoration: none;
+}
+
+.auth-help a:hover {
+    text-decoration: underline;
+}
+
+/* Error Actions */
+.error-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.error-actions button {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .auth-modal-content {
+        width: 95%;
+        margin: 20px;
+        border-radius: 16px;
+    }
+    
+    .auth-header {
+        padding: 20px 20px 0;
+    }
+    
+    .auth-step {
+        padding: 20px;
+    }
+    
+    .auth-header h2 {
+        font-size: 20px;
+    }
+    
+    .wallet-option {
+        padding: 14px;
+    }
+    
+    .wallet-icon {
+        font-size: 20px;
+        margin-right: 12px;
+        min-width: 28px;
+    }
+    
+    .wallet-name {
+        font-size: 15px;
+    }
+    
+    .wallet-desc {
+        font-size: 13px;
+    }
+    
+    .user-balances {
+        grid-template-columns: 1fr;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+    }
+}
+
+/* Animation for step transitions */
+.auth-step {
+    animation: stepFadeIn 0.3s ease-out;
+}
+
+@keyframes stepFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

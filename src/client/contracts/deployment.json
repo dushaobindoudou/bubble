@@ -1,0 +1,54 @@
+{
+  "network": "monad-testnet",
+  "chainId": 10143,
+  "deployedAt": "2024-01-01T00:00:00.000Z",
+  "deployer": "0x0000000000000000000000000000000000000000",
+  "contracts": {
+    "RandomGenerator": "0x0000000000000000000000000000000000000000",
+    "AccessControlManager": "0x0000000000000000000000000000000000000000",
+    "BubbleToken": "0x0000000000000000000000000000000000000000",
+    "BubbleSkinNFT": "0x0000000000000000000000000000000000000000",
+    "GameRewards": "0x0000000000000000000000000000000000000000",
+    "Marketplace": "0x0000000000000000000000000000000000000000"
+  },
+  "verification": {
+    "RandomGenerator": {
+      "verified": false,
+      "explorerUrl": ""
+    },
+    "AccessControlManager": {
+      "verified": false,
+      "explorerUrl": ""
+    },
+    "BubbleToken": {
+      "verified": false,
+      "explorerUrl": ""
+    },
+    "BubbleSkinNFT": {
+      "verified": false,
+      "explorerUrl": ""
+    },
+    "GameRewards": {
+      "verified": false,
+      "explorerUrl": ""
+    },
+    "Marketplace": {
+      "verified": false,
+      "explorerUrl": ""
+    }
+  },
+  "gasUsed": {
+    "RandomGenerator": 0,
+    "AccessControlManager": 0,
+    "BubbleToken": 0,
+    "BubbleSkinNFT": 0,
+    "GameRewards": 0,
+    "Marketplace": 0,
+    "total": 0
+  },
+  "notes": [
+    "This file will be automatically updated when contracts are deployed to Monad Testnet",
+    "Contract addresses will be populated by the deployment script",
+    "Verification status will be updated after contract verification on Monad Explorer"
+  ]
+}
