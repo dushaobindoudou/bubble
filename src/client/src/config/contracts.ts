@@ -31,7 +31,7 @@ export { default as BubbleSkinNFTABI } from '../contracts/abis/BubbleSkinNFT.jso
 export { default as AccessControlManagerABI } from '../contracts/abis/AccessControlManager.json'
 export { default as GameRewardsABI } from '../contracts/abis/GameRewards.json'
 // TODO: Add Marketplace and RandomGenerator ABIs when available
-// export { default as MarketplaceABI } from '../contracts/abis/Marketplace.json'
+export { default as MarketplaceABI } from '../contracts/abis/Marketplace.json'
 // export { default as RandomGeneratorABI } from '../contracts/abis/RandomGenerator.json'
 
 // Type definitions for contract addresses

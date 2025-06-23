@@ -47,9 +47,7 @@
     "exactOptionalPropertyTypes": true
   },
   "include": [
-    "src",
-    "*.ts",
-    "*.tsx",
+    "src/**/*",
     "vite-env.d.ts"
   ],
   "exclude": [

@@ -98,13 +98,15 @@ export const useSkinAdmin = () => {
     return effectMap[effect] || 'NONE'
   }
 
-  // Check user permissions
+  // Check user permissions - 权限很少变化，缓存更久
   const { data: hasSkinManagerRole } = useContractRead({
     address: BUBBLE_SKIN_NFT_ADDRESS,
     abi: BUBBLE_SKIN_NFT_ABI,
     functionName: 'hasRole',
     args: [NFT_ROLES.SKIN_MANAGER_ROLE, address], // SKIN_MANAGER_ROLE
     enabled: !!address,
+    cacheTime: 600_000, // 缓存10分钟
+    staleTime: 600_000,
   })
 
   const { data: hasAdminRole } = useContractRead({
@@ -113,6 +115,8 @@ export const useSkinAdmin = () => {
     functionName: 'hasRole',
     args: [NFT_ROLES.ADMIN_ROLE, address], // ADMIN_ROLE
     enabled: !!address,
+    cacheTime: 600_000,
+    staleTime: 600_000,
   })
 
   const { data: hasMinterRole } = useContractRead({
@@ -121,14 +125,17 @@ export const useSkinAdmin = () => {
     functionName: 'hasRole',
     args: [NFT_ROLES.MINTER_ROLE, address], // MINTER_ROLE
     enabled: !!address,
+    cacheTime: 600_000,
+    staleTime: 600_000,
   })
 
-  // Get total number of templates with error handling
+  // Get total number of templates with error handling - 模板数量变化较少
   const { data: templateCount, isLoading: isLoadingCount, refetch: refetchCount, error: templateCountError } = useContractRead({
     address: BUBBLE_SKIN_NFT_ADDRESS,
     abi: BUBBLE_SKIN_NFT_ABI,
     functionName: 'getTotalTemplates',
-    watch: true,
+    cacheTime: 120_000, // 缓存2分钟
+    staleTime: 60_000,
     onError: (error) => {
       console.error('Error fetching template count:', error)
       console.error('Contract address:', BUBBLE_SKIN_NFT_ADDRESS)

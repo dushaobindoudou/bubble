@@ -1,98 +1,256 @@
 import React, { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
+import { formatEther } from 'viem'
 import { useSkinAdmin } from '../../hooks/useSkinAdmin'
 import { useSkinPurchase } from '../../hooks/useSkinPurchase'
+import { useMarketplace } from '../../hooks/useMarketplace'
+import { useTokenBalance } from '../../hooks/useTokenBalance'
+import { useNFTSkins, NFTSkin } from '../../hooks/useNFTSkins'
 import { LoadingSpinner } from '../ui/LoadingSpinner'
 import { Button } from '../ui/Button'
 import { Header } from '../layout/Header'
 import { MinimalBackground } from '../ui/AnimatedBackground'
+import { EnhancedContentPreview } from '../ui/EnhancedContentPreview'
+import { NFTListingCard } from '../marketplace/NFTListingCard'
+import { SellNFTDialog } from '../marketplace/SellNFTDialog'
+import { RPCMonitor } from '../debug/RPCMonitor'
 import { toast } from 'react-hot-toast'
+import { useDebounce } from '../../utils/rpcOptimization'
 
-// 内容预览组件（复用之前的实现）
-interface ContentPreviewCardProps {
-  content: string
-  templateName: string
-  templateId: number
+// 用户 NFT 卡片组件
+interface UserNFTCardProps {
+  nft: NFTSkin
+  onSell: (nft: NFTSkin) => void
+  isListed?: boolean
+  isEquipped?: boolean
+  listingPrice?: string
 }
 
-const ContentPreviewCard: React.FC<ContentPreviewCardProps> = ({ content, templateName, templateId }) => {
-  const [imageLoading, setImageLoading] = useState(true)
-  const [imageError, setImageError] = useState(false)
-
-  const handleImageLoad = () => {
-    setImageLoading(false)
-    setImageError(false)
+const UserNFTCard: React.FC<UserNFTCardProps> = ({
+  nft,
+  onSell,
+  isListed = false,
+  isEquipped = false,
+  listingPrice
+}) => {
+  const getRarityColor = (rarity: string) => {
+    switch (rarity) {
+      case 'LEGENDARY': return 'from-yellow-500/20 to-orange-500/20 border-yellow-500/30'
+      case 'EPIC': return 'from-purple-500/20 to-pink-500/20 border-purple-500/30'
+      case 'RARE': return 'from-blue-500/20 to-cyan-500/20 border-blue-500/30'
+      default: return 'from-gray-500/20 to-gray-600/20 border-gray-500/30'
+    }
   }
 
-  const handleImageError = () => {
-    setImageLoading(false)
-    setImageError(true)
+  const getRarityIcon = (rarity: string) => {
+    switch (rarity) {
+      case 'LEGENDARY': return '👑'
+      case 'EPIC': return '💎'
+      case 'RARE': return '⭐'
+      default: return '🔹'
+    }
   }
 
-  // 检测内容类型
-  const isImageUrl = (content: string): boolean => {
-    if (!content) return false
-    const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg|bmp|ico)(\?.*)?$/i
-    const urlPattern = /^(https?:\/\/|ipfs:\/\/|\/ipfs\/)/i
-    return urlPattern.test(content.trim()) && imageExtensions.test(content.trim()) || content.trim().startsWith('data:image/')
+  const getRarityText = (rarity: string) => {
+    switch (rarity) {
+      case 'LEGENDARY': return '传说'
+      case 'EPIC': return '史诗'
+      case 'RARE': return '稀有'
+      case 'COMMON': return '普通'
+      default: return '未知'
+    }
   }
 
-  const isSvgContent = (content: string): boolean => {
-    if (!content) return false
-    const trimmed = content.trim()
-    return trimmed.startsWith('<svg') && trimmed.includes('</svg>')
+  const formatDate = (timestamp: number) => {
+    return new Date(timestamp * 1000).toLocaleDateString('zh-CN')
   }
-
-  const isImage = isImageUrl(content)
-  const isSvg = isSvgContent(content)
 
   return (
-    <div className="aspect-square bg-gradient-to-br from-white/5 to-white/10 rounded-xl overflow-hidden relative">
-      {/* 图片内容 */}
-      {isImage && (
-        <>
-          {imageLoading && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <LoadingSpinner size="sm" />
+    <div className={`bg-gradient-to-br ${getRarityColor(nft.rarity)} backdrop-blur-xl rounded-3xl p-4 border transition-all duration-300 hover:scale-[1.02] ${
+      isEquipped ? 'ring-2 ring-green-400/50' : ''
+    }`}>
+      {/* 状态标签 */}
+      <div className="flex justify-between items-start mb-3">
+        <div className={`px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${getRarityColor(nft.rarity)}`}>
+          {getRarityIcon(nft.rarity)} {getRarityText(nft.rarity)}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          {isEquipped && (
+            <div className="px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs font-medium border border-green-500/30">
+              ⚔️ 已装备
             </div>
           )}
-          
-          {imageError ? (
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-white/50">
-              <div className="text-2xl mb-2">🖼️</div>
-              <div className="text-xs text-center">图片加载失败</div>
+          {isListed && (
+            <div className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-medium border border-blue-500/30">
+              🏷️ 已上架
             </div>
-          ) : (
-            <img
-              src={content}
-              alt={`${templateName} 预览`}
-              className="w-full h-full object-cover transition-all duration-300"
-              style={{ opacity: imageLoading ? 0 : 1 }}
-              onLoad={handleImageLoad}
-              onError={handleImageError}
-              loading="lazy"
-            />
           )}
-        </>
-      )}
-
-      {/* SVG 内容 */}
-      {isSvg && (
-        <div className="w-full h-full flex items-center justify-center p-4">
-          <div 
-            className="w-full h-full"
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
+          <div className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-xs font-medium border border-purple-500/30">
+            NFT
+          </div>
         </div>
-      )}
+      </div>
 
-      {/* 文本内容 */}
-      {!isImage && !isSvg && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white/50">
-          <div className="text-2xl mb-2">📄</div>
-          <div className="text-xs text-center">皮肤预览</div>
+      {/* NFT 预览 */}
+      <div className="mb-4">
+        <EnhancedContentPreview
+          content={nft.content}
+          templateName={nft.name}
+          templateId={parseInt(nft.templateId)}
+          size="md"
+          showLabel={false}
+          enableFullView={true}
+        />
+      </div>
+
+      {/* NFT 信息 */}
+      <div className="space-y-3">
+        <div>
+          <h3 className="text-white font-semibold text-sm mb-1">{nft.name}</h3>
+          <p className="text-white/70 text-xs line-clamp-2">{nft.description}</p>
         </div>
-      )}
+
+        {/* 详细信息 */}
+        <div className="bg-black/20 rounded-xl p-3 space-y-2">
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <span className="text-white/60">Token ID:</span>
+              <div className="text-white font-medium">#{nft.tokenId}</div>
+            </div>
+            <div>
+              <span className="text-white/60">序列号:</span>
+              <div className="text-white font-medium">#{nft.serialNumber}</div>
+            </div>
+            <div>
+              <span className="text-white/60">特效:</span>
+              <div className="text-white font-medium">{nft.effectType}</div>
+            </div>
+            <div>
+              <span className="text-white/60">铸造时间:</span>
+              <div className="text-white font-medium">{formatDate(nft.mintedAt)}</div>
+            </div>
+          </div>
+
+          {isListed && listingPrice && (
+            <div className="pt-2 border-t border-white/10">
+              <div className="flex items-center justify-between">
+                <span className="text-white/60 text-xs">挂单价格:</span>
+                <span className="text-green-400 font-bold">{listingPrice} BUB</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 操作按钮 */}
+        <div className="space-y-2">
+          {!isListed && (
+            <Button
+              onClick={() => onSell(nft)}
+              variant="primary"
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+              disabled={isEquipped}
+            >
+              💰 出售 NFT
+            </Button>
+          )}
+
+          {isListed && (
+            <div className="text-center p-2 bg-blue-500/20 rounded-xl border border-blue-400/30">
+              <span className="text-blue-400 font-semibold text-sm">已在市场上架</span>
+            </div>
+          )}
+
+          {isEquipped && !isListed && (
+            <div className="text-center p-2 bg-yellow-500/20 rounded-xl border border-yellow-400/30">
+              <span className="text-yellow-400 font-semibold text-sm">装备中无法出售</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// 皮肤模板卡片组件
+interface SkinTemplateCardProps {
+  template: any
+  onPurchase: (template: any) => void
+}
+
+const SkinTemplateCard: React.FC<SkinTemplateCardProps> = ({ template, onPurchase }) => {
+  const getRarityColor = (rarity: string) => {
+    switch (rarity) {
+      case 'LEGENDARY': return 'from-yellow-500/20 to-orange-500/20 border-yellow-500/30'
+      case 'EPIC': return 'from-purple-500/20 to-pink-500/20 border-purple-500/30'
+      case 'RARE': return 'from-blue-500/20 to-cyan-500/20 border-blue-500/30'
+      default: return 'from-gray-500/20 to-gray-600/20 border-gray-500/30'
+    }
+  }
+
+  const getRarityIcon = (rarity: string) => {
+    switch (rarity) {
+      case 'LEGENDARY': return '👑'
+      case 'EPIC': return '💎'
+      case 'RARE': return '⭐'
+      default: return '🔹'
+    }
+  }
+
+  return (
+    <div className={`bg-gradient-to-br ${getRarityColor(template.rarity)} backdrop-blur-xl rounded-3xl p-4 border transition-all duration-300 hover:scale-[1.02]`}>
+      {/* 稀有度标签 */}
+      <div className="flex justify-between items-start mb-3">
+        <div className={`px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${getRarityColor(template.rarity)}`}>
+          {getRarityIcon(template.rarity)} {template.rarity}
+        </div>
+        <div className="px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs font-medium border border-green-500/30">
+          模板
+        </div>
+      </div>
+
+      {/* 皮肤预览 */}
+      <div className="mb-4 relative">
+        <EnhancedContentPreview
+          content={template.content}
+          templateName={template.name}
+          templateId={template.templateId}
+          size="md"
+          showLabel={true}
+          enableFullView={true}
+        />
+      </div>
+
+      {/* 皮肤信息 */}
+      <div className="space-y-3">
+        <div>
+          <h3 className="text-white font-semibold text-sm mb-1">{template.name}</h3>
+          <p className="text-white/70 text-xs line-clamp-2">{template.description}</p>
+        </div>
+
+        {/* 价格和库存 */}
+        <div className="bg-black/20 rounded-xl p-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-white/60 text-xs">价格</span>
+            <div className="text-right">
+              <div className="text-white font-bold text-lg">{template.price || 100} BUB</div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-white/60">库存</span>
+            <span className="text-white">{template.currentSupply}/{template.maxSupply}</span>
+          </div>
+        </div>
+
+        {/* 购买按钮 */}
+        <Button
+          onClick={() => onPurchase(template)}
+          variant="primary"
+          className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+        >
+          🛒 购买模板
+        </Button>
+      </div>
     </div>
   )
 }
@@ -140,10 +298,13 @@ const SkinCard: React.FC<SkinCardProps> = ({
     <div className={`bg-gradient-to-br ${getRarityColor(template.rarity)} backdrop-blur-xl rounded-3xl p-6 border transition-all duration-300 hover:scale-105 hover:shadow-2xl ${isOwned ? 'opacity-75' : ''}`}>
       {/* 皮肤预览 */}
       <div className="mb-4 relative">
-        <ContentPreviewCard 
+        <EnhancedContentPreview
           content={template.content}
           templateName={template.name}
           templateId={template.templateId}
+          size="md"
+          showLabel={true}
+          enableFullView={true}
         />
         
         {/* 状态标签 */}
@@ -239,40 +400,138 @@ const SkinCard: React.FC<SkinCardProps> = ({
 
 export const Store: React.FC = () => {
   const { address } = useAccount()
+  const { templates, isLoadingTemplates, refreshTemplates } = useSkinAdmin()
+  const { purchaseSkin, isLoading: isPurchasing } = useSkinPurchase()
   const {
-    templates,
-    isLoadingTemplates,
-    contractConnected,
-    refreshData
-  } = useSkinAdmin()
+    listings,
+    userListings,
+    marketStats,
+    buyNFT,
+    isBuying,
+    refreshData: refreshMarketplace
+  } = useMarketplace()
+  const { balance: bubBalance } = useTokenBalance()
+  const { skins: userNFTs, isLoading: isLoadingNFTs, refreshSkins } = useNFTSkins()
 
-  const {
-    tokenBalance,
-    isPurchasing,
-    purchaseState,
-    purchaseSkin,
-    resetPurchaseState,
-    hasEnoughBalance,
-    getUserOwnedSkins,
-    refetchBalance,
-  } = useSkinPurchase()
-
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedRarity, setSelectedRarity] = useState<string>('ALL')
-  const [sortBy, setSortBy] = useState<'name' | 'price' | 'rarity'>('name')
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [userOwnedSkins, setUserOwnedSkins] = useState<number[]>([])
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false)
+  const [activeTab, setActiveTab] = useState<'marketplace' | 'templates' | 'mynfts'>('marketplace')
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null)
+  const [selectedListing, setSelectedListing] = useState<any>(null)
+  const [selectedNFT, setSelectedNFT] = useState<NFTSkin | null>(null)
+  const [showPurchaseDialog, setShowPurchaseDialog] = useState(false)
+  const [showBuyDialog, setShowBuyDialog] = useState(false)
+  const [showSellDialog, setShowSellDialog] = useState(false)
+  const [filter, setFilter] = useState<'all' | 'common' | 'rare' | 'epic' | 'legendary'>('all')
+  const [nftFilter, setNftFilter] = useState<'all' | 'listed' | 'unlisted' | 'equipped'>('all')
+  const [sortBy, setSortBy] = useState<'name' | 'rarity' | 'price'>('name')
+  const [priceRange, setPriceRange] = useState<'all' | 'low' | 'mid' | 'high'>('all')
+  const [searchTerm, setSearchTerm] = useState('')
 
-  // 筛选和排序皮肤
+  // 筛选和排序 NFT 挂单
+  const filteredAndSortedListings = React.useMemo(() => {
+    let filtered = listings.filter(listing => {
+      // 基本筛选：只显示活跃的挂单
+      if (listing.status !== 0) return false
+
+      // 价格范围筛选
+      const price = parseFloat(formatEther(listing.price))
+      if (priceRange === 'low' && price > 100) return false
+      if (priceRange === 'mid' && (price <= 100 || price > 500)) return false
+      if (priceRange === 'high' && price <= 500) return false
+
+      return true
+    })
+
+    // 排序
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'price':
+          return Number(a.price - b.price)
+        case 'rarity':
+          // 这里需要从 NFT 元数据获取稀有度，暂时按价格排序
+          return Number(b.price - a.price)
+        default:
+          return a.tokenId - b.tokenId
+      }
+    })
+
+    return filtered
+  }, [listings, priceRange, sortBy])
+
+  // 筛选和排序用户 NFT
+  const filteredAndSortedUserNFTs = React.useMemo(() => {
+    // 获取当前装备的皮肤 ID
+    const equippedSkinId = localStorage.getItem('bubble_brawl_equipped_skin') || 'default'
+
+    // 创建用户挂单的映射
+    const userListingMap = new Map()
+    userListings.forEach(listing => {
+      if (listing.status === 0) { // 只考虑活跃挂单
+        userListingMap.set(listing.tokenId.toString(), {
+          listingId: listing.listingId,
+          price: formatEther(listing.price)
+        })
+      }
+    })
+
+    let filtered = userNFTs.filter(nft => {
+      const isListed = userListingMap.has(nft.tokenId)
+      const isEquipped = nft.templateId === equippedSkinId
+
+      // 根据筛选条件过滤
+      switch (nftFilter) {
+        case 'listed': return isListed
+        case 'unlisted': return !isListed
+        case 'equipped': return isEquipped
+        default: return true
+      }
+    })
+
+    // 根据稀有度筛选
+    if (filter !== 'all') {
+      filtered = filtered.filter(nft => nft.rarity.toLowerCase() === filter)
+    }
+
+    // 搜索筛选
+    if (searchTerm) {
+      filtered = filtered.filter(nft =>
+        nft.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        nft.description.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
+    // 排序
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'price':
+          // 按挂单价格排序，未挂单的排在后面
+          const priceA = userListingMap.get(a.tokenId)?.price || '999999'
+          const priceB = userListingMap.get(b.tokenId)?.price || '999999'
+          return parseFloat(priceA) - parseFloat(priceB)
+        case 'rarity':
+          const rarityOrder = { 'COMMON': 0, 'RARE': 1, 'EPIC': 2, 'LEGENDARY': 3 }
+          return rarityOrder[b.rarity as keyof typeof rarityOrder] - rarityOrder[a.rarity as keyof typeof rarityOrder]
+        default:
+          return a.name.localeCompare(b.name)
+      }
+    })
+
+    // 添加挂单信息
+    return filtered.map(nft => ({
+      ...nft,
+      isListed: userListingMap.has(nft.tokenId),
+      isEquipped: nft.templateId === equippedSkinId,
+      listingPrice: userListingMap.get(nft.tokenId)?.price
+    }))
+  }, [userNFTs, userListings, nftFilter, filter, searchTerm, sortBy])
+
+  // 筛选和排序皮肤模板
   const filteredAndSortedTemplates = React.useMemo(() => {
     let filtered = templates.filter(template => {
       const matchesSearch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            template.description.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesRarity = selectedRarity === 'ALL' || template.rarity === selectedRarity
+      const matchesRarity = filter === 'all' || template.rarity.toLowerCase() === filter
       const isAvailable = template.isActive
-      
+
       return matchesSearch && matchesRarity && isAvailable
     })
 
@@ -290,40 +549,77 @@ export const Store: React.FC = () => {
     })
 
     return filtered
-  }, [templates, searchTerm, selectedRarity, sortBy])
+  }, [templates, searchTerm, filter, sortBy])
 
-  // 加载用户拥有的皮肤 - 暂时禁用避免死循环
-  useEffect(() => {
-    // 暂时设置为空数组，避免死循环
-    // TODO: 实现正确的用户拥有皮肤查询
-    setUserOwnedSkins([])
-  }, [address])
-
-  // 监听购买状态变化
-  useEffect(() => {
-    if (purchaseState.step === 'success') {
-      setShowPurchaseModal(false)
-      setSelectedTemplate(null)
-      // 简化处理，避免调用可能导致循环的函数
+  // 处理 NFT 购买
+  const handleBuyNFT = async (listingId: number) => {
+    try {
+      await buyNFT(listingId)
+      // 刷新数据
       setTimeout(() => {
-        refreshData()
-        refetchBalance()
-        resetPurchaseState()
-      }, 1000)
+        refreshMarketplace()
+      }, 2000)
+    } catch (error) {
+      console.error('Buy NFT error:', error)
     }
-  }, [purchaseState.step]) // 只依赖购买状态
+  }
 
-  const handlePurchaseClick = (template: any) => {
+  // 处理模板购买
+  const handlePurchaseTemplate = (template: any) => {
     setSelectedTemplate(template)
-    setShowPurchaseModal(true)
+    setShowPurchaseDialog(true)
   }
 
   const handleConfirmPurchase = async () => {
     if (!selectedTemplate) return
 
-    const price = selectedTemplate.price || 100
-    await purchaseSkin(selectedTemplate.templateId, price)
+    try {
+      const price = selectedTemplate.price || 100
+      await purchaseSkin(selectedTemplate.templateId, price)
+      setShowPurchaseDialog(false)
+      setSelectedTemplate(null)
+      // 刷新数据
+      setTimeout(() => {
+        refreshTemplates()
+      }, 2000)
+    } catch (error) {
+      console.error('Purchase template error:', error)
+    }
   }
+
+  // 处理 NFT 出售
+  const handleSellNFT = (nft: NFTSkin) => {
+    setSelectedNFT(nft)
+    setShowSellDialog(true)
+  }
+
+  // 出售成功回调
+  const handleSellSuccess = () => {
+    // 刷新相关数据
+    setTimeout(() => {
+      refreshMarketplace()
+      refreshSkins()
+    }, 2000)
+    toast.success('NFT 上架成功！')
+  }
+
+  // 刷新所有数据 - 添加防抖机制
+  const refreshAllDataImmediate = async () => {
+    try {
+      await Promise.all([
+        refreshMarketplace(),
+        refreshTemplates(),
+        refreshSkins()
+      ])
+      toast.success('数据刷新成功')
+    } catch (error) {
+      console.error('Refresh data error:', error)
+      toast.error('数据刷新失败')
+    }
+  }
+
+  // 防抖的刷新函数
+  const refreshAllData = useDebounce(refreshAllDataImmediate, 1000)
 
   if (!address) {
     return (
@@ -383,141 +679,319 @@ export const Store: React.FC = () => {
             {/* 页面标题 */}
             <div className="text-center">
               <h1 className="text-4xl font-bold text-white mb-4">🛍️ 皮肤商店</h1>
-              <p className="text-white/70 text-lg">购买独特的游戏皮肤，个性化您的游戏体验</p>
+              <p className="text-white/70 text-lg">探索 NFT 市场和皮肤模板，个性化您的游戏体验</p>
             </div>
 
-        {/* 用户信息栏 */}
-        <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="text-2xl">💰</div>
-              <div>
-                <div className="text-white font-semibold">您的余额</div>
-                <div className="text-white/70">{tokenBalance?.toLocaleString() || 0} BUB</div>
+            {/* 标签页导航 */}
+            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-2 border border-white/20">
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  onClick={() => setActiveTab('marketplace')}
+                  className={`px-4 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
+                    activeTab === 'marketplace'
+                      ? 'bg-white/20 text-white shadow-lg'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <span className="text-xl">🏪</span>
+                  <span className="hidden sm:inline">NFT 市场</span>
+                  <span className="sm:hidden">市场</span>
+                  {marketStats && (
+                    <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+                      {marketStats.activeListings}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={() => setActiveTab('mynfts')}
+                  className={`px-4 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
+                    activeTab === 'mynfts'
+                      ? 'bg-white/20 text-white shadow-lg'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <span className="text-xl">💎</span>
+                  <span className="hidden sm:inline">我的 NFT</span>
+                  <span className="sm:hidden">我的</span>
+                  {userNFTs.length > 0 && (
+                    <span className="bg-purple-500 text-white text-xs px-2 py-1 rounded-full">
+                      {userNFTs.length}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={() => setActiveTab('templates')}
+                  className={`px-4 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
+                    activeTab === 'templates'
+                      ? 'bg-white/20 text-white shadow-lg'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <span className="text-xl">🎨</span>
+                  <span className="hidden sm:inline">皮肤模板</span>
+                  <span className="sm:hidden">模板</span>
+                  <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                    {templates.length}
+                  </span>
+                </button>
               </div>
             </div>
-            
-            <div className="flex items-center gap-4">
-              <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
-                contractConnected 
-                  ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                  : 'bg-red-500/20 text-red-400 border border-red-500/30'
-              }`}>
-                <div className={`w-2 h-2 rounded-full ${contractConnected ? 'bg-green-400' : 'bg-red-400'}`} />
-                {contractConnected ? '合约已连接' : '合约连接失败'}
+
+            {/* 用户信息栏 */}
+            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-3">
+                    <div className="text-2xl">💰</div>
+                    <div>
+                      <div className="text-white font-semibold">您的余额</div>
+                      <div className="text-white/70">{bubBalance?.toLocaleString() || 0} BUB</div>
+                    </div>
+                  </div>
+
+                  {marketStats && (
+                    <div className="flex items-center gap-3">
+                      <div className="text-2xl">📊</div>
+                      <div>
+                        <div className="text-white font-semibold">市场统计</div>
+                        <div className="text-white/70 text-sm">
+                          {marketStats.activeListings} 个挂单 • 总成交 {marketStats.totalSales}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <Button onClick={refreshAllData} variant="ghost" size="sm">
+                    🔄 刷新
+                  </Button>
+                </div>
               </div>
-              
-              <Button onClick={refreshData} variant="ghost" size="sm">
-                🔄 刷新
-              </Button>
             </div>
-          </div>
-        </div>
 
-        {/* 筛选和搜索栏 */}
-        <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* 搜索框 */}
-            <div className="md:col-span-2">
-              <input
-                type="text"
-                placeholder="搜索皮肤名称或描述..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-white/40"
-              />
-            </div>
-            
-            {/* 稀有度筛选 */}
-            <select
-              value={selectedRarity}
-              onChange={(e) => setSelectedRarity(e.target.value)}
-              className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-white/40"
-            >
-              <option value="ALL">所有稀有度</option>
-              <option value="COMMON">普通</option>
-              <option value="RARE">稀有</option>
-              <option value="EPIC">史诗</option>
-              <option value="LEGENDARY">传说</option>
-            </select>
-            
-            {/* 排序方式 */}
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'name' | 'price' | 'rarity')}
-              className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-white/40"
-            >
-              <option value="name">按名称排序</option>
-              <option value="price">按价格排序</option>
-              <option value="rarity">按稀有度排序</option>
-            </select>
-          </div>
-          
-          {/* 视图切换 */}
-          <div className="flex items-center justify-between mt-4">
-            <div className="text-white/70 text-sm">
-              找到 {filteredAndSortedTemplates.length} 个皮肤
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={() => setViewMode('grid')}
-                variant={viewMode === 'grid' ? 'primary' : 'ghost'}
-                size="sm"
-              >
-                🔲 网格
-              </Button>
-              <Button
-                onClick={() => setViewMode('list')}
-                variant={viewMode === 'list' ? 'primary' : 'ghost'}
-                size="sm"
-              >
-                📋 列表
-              </Button>
-            </div>
-          </div>
-        </div>
+            {/* 筛选和搜索栏 */}
+            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {/* 搜索框 */}
+                {(activeTab === 'templates' || activeTab === 'mynfts') && (
+                  <div className="md:col-span-2">
+                    <input
+                      type="text"
+                      placeholder={activeTab === 'mynfts' ? "搜索我的 NFT..." : "搜索皮肤名称或描述..."}
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-white/40"
+                    />
+                  </div>
+                )}
 
-        {/* 皮肤展示区域 */}
-        {filteredAndSortedTemplates.length === 0 ? (
-          <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 text-center">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-white mb-2">未找到匹配的皮肤</h3>
-            <p className="text-white/70">请尝试调整搜索条件或筛选选项</p>
-          </div>
-        ) : (
-          <div className={`grid gap-6 ${
-            viewMode === 'grid' 
-              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
-              : 'grid-cols-1'
-          }`}>
-            {filteredAndSortedTemplates.map((template) => (
-              <SkinCard
-                key={template.templateId}
-                template={template}
-                userBalance={tokenBalance || 0}
-                onPurchase={handlePurchaseClick}
-                isPurchasing={isPurchasing}
-                userOwnedSkins={userOwnedSkins}
-              />
-            ))}
-          </div>
+                {/* 筛选选项 */}
+                {activeTab === 'marketplace' ? (
+                  <>
+                    <div className="md:col-span-2">
+                      <select
+                        value={priceRange}
+                        onChange={(e) => setPriceRange(e.target.value as any)}
+                        className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-white/40"
+                      >
+                        <option value="all">所有价格</option>
+                        <option value="low">低价 (≤100 BUB)</option>
+                        <option value="mid">中价 (100-500 BUB)</option>
+                        <option value="high">高价 (&gt;500 BUB)</option>
+                      </select>
+                    </div>
+                  </>
+                ) : activeTab === 'mynfts' ? (
+                  <>
+                    <select
+                      value={nftFilter}
+                      onChange={(e) => setNftFilter(e.target.value as any)}
+                      className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-white/40"
+                    >
+                      <option value="all">所有 NFT</option>
+                      <option value="unlisted">可出售</option>
+                      <option value="listed">已上架</option>
+                      <option value="equipped">已装备</option>
+                    </select>
+                    <select
+                      value={filter}
+                      onChange={(e) => setFilter(e.target.value as any)}
+                      className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-white/40"
+                    >
+                      <option value="all">所有稀有度</option>
+                      <option value="common">普通</option>
+                      <option value="rare">稀有</option>
+                      <option value="epic">史诗</option>
+                      <option value="legendary">传说</option>
+                    </select>
+                  </>
+                ) : (
+                  <select
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value as any)}
+                    className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-white/40"
+                  >
+                    <option value="all">所有稀有度</option>
+                    <option value="common">普通</option>
+                    <option value="rare">稀有</option>
+                    <option value="epic">史诗</option>
+                    <option value="legendary">传说</option>
+                  </select>
+                )}
+
+                {/* 排序方式 */}
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-white/40"
+                >
+                  <option value="name">按名称排序</option>
+                  <option value="price">{activeTab === 'mynfts' ? '按挂单价格排序' : '按价格排序'}</option>
+                  <option value="rarity">按稀有度排序</option>
+                </select>
+              </div>
+
+              {/* 统计信息 */}
+              <div className="flex items-center justify-between mt-4">
+                <div className="text-white/70 text-sm">
+                  {activeTab === 'marketplace'
+                    ? `找到 ${filteredAndSortedListings.length} 个 NFT 挂单`
+                    : activeTab === 'mynfts'
+                    ? `找到 ${filteredAndSortedUserNFTs.length} 个我的 NFT`
+                    : `找到 ${filteredAndSortedTemplates.length} 个皮肤模板`
+                  }
+                </div>
+
+                {activeTab === 'mynfts' && (
+                  <div className="flex items-center gap-4 text-xs">
+                    <div className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                      <span className="text-white/60">总计 {userNFTs.length}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span className="text-white/60">已上架 {filteredAndSortedUserNFTs.filter(nft => nft.isListed).length}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className="text-white/60">已装备 {filteredAndSortedUserNFTs.filter(nft => nft.isEquipped).length}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* 主要内容区域 */}
+            {activeTab === 'marketplace' ? (
+              /* NFT 市场 */
+              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
+                {listings.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">🏪</div>
+                    <h3 className="text-xl font-semibold text-white mb-2">暂无 NFT 挂单</h3>
+                    <p className="text-white/70">市场上还没有 NFT 皮肤在售</p>
+                  </div>
+                ) : (
+                  <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {filteredAndSortedListings.map((listing) => (
+                      <NFTListingCard
+                        key={listing.listingId}
+                        listing={listing}
+                        onBuy={handleBuyNFT}
+                        isBuying={isBuying}
+                        size="md"
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : activeTab === 'mynfts' ? (
+              /* 我的 NFT */
+              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
+                {isLoadingNFTs ? (
+                  <div className="flex justify-center py-12">
+                    <LoadingSpinner size="lg" />
+                    <div className="ml-4 text-white/70">正在加载您的 NFT...</div>
+                  </div>
+                ) : userNFTs.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">💎</div>
+                    <h3 className="text-xl font-semibold text-white mb-2">暂无 NFT</h3>
+                    <p className="text-white/70 mb-4">您还没有拥有任何 NFT 皮肤</p>
+                    <Button
+                      onClick={() => setActiveTab('marketplace')}
+                      variant="primary"
+                      className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+                    >
+                      🏪 去市场购买
+                    </Button>
+                  </div>
+                ) : filteredAndSortedUserNFTs.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">🔍</div>
+                    <h3 className="text-xl font-semibold text-white mb-2">未找到匹配的 NFT</h3>
+                    <p className="text-white/70">请尝试调整筛选条件</p>
+                  </div>
+                ) : (
+                  <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {filteredAndSortedUserNFTs.map((nft) => (
+                      <UserNFTCard
+                        key={nft.tokenId}
+                        nft={nft}
+                        onSell={handleSellNFT}
+                        isListed={nft.isListed}
+                        isEquipped={nft.isEquipped}
+                        listingPrice={nft.listingPrice}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* 皮肤模板 */
+              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
+                {isLoadingTemplates ? (
+                  <div className="flex justify-center py-12">
+                    <LoadingSpinner size="lg" />
+                  </div>
+                ) : filteredAndSortedTemplates.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">🎨</div>
+                    <h3 className="text-xl font-semibold text-white mb-2">暂无皮肤模板</h3>
+                    <p className="text-white/70">没有找到符合条件的皮肤模板</p>
+                  </div>
+                ) : (
+                  <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {filteredAndSortedTemplates.map((template) => (
+                      <SkinTemplateCard
+                        key={template.templateId}
+                        template={template}
+                        onPurchase={handlePurchaseTemplate}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </main>
 
         {/* 购买确认对话框 */}
-        {showPurchaseModal && selectedTemplate && (
+        {showPurchaseDialog && selectedTemplate && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 max-w-md w-full">
               <h3 className="text-xl font-semibold text-white mb-4">🛒 确认购买</h3>
 
               {/* 皮肤预览 */}
               <div className="mb-4">
-                <ContentPreviewCard
+                <EnhancedContentPreview
                   content={selectedTemplate.content}
                   templateName={selectedTemplate.name}
                   templateId={selectedTemplate.templateId}
+                  size="md"
+                  showLabel={true}
+                  enableFullView={true}
                 />
               </div>
 
@@ -545,47 +1019,18 @@ export const Store: React.FC = () => {
 
                 <div className="flex items-center justify-between">
                   <span className="text-white/60">您的余额:</span>
-                  <span className="text-white">{tokenBalance.toLocaleString()} BUB</span>
+                  <span className="text-white">{bubBalance?.toLocaleString() || 0} BUB</span>
                 </div>
               </div>
 
-              {/* 购买状态显示 */}
-              {purchaseState.step !== 'idle' && (
-                <div className="mb-4 p-3 bg-blue-500/20 rounded-xl border border-blue-500/30">
-                  <div className="flex items-center gap-2">
-                    {purchaseState.step === 'approving' && (
-                      <>
-                        <LoadingSpinner size="sm" />
-                        <span className="text-blue-300">正在授权代币使用...</span>
-                      </>
-                    )}
-                    {purchaseState.step === 'minting' && (
-                      <>
-                        <LoadingSpinner size="sm" />
-                        <span className="text-blue-300">正在铸造皮肤...</span>
-                      </>
-                    )}
-                    {purchaseState.step === 'success' && (
-                      <>
-                        <span className="text-green-300">✅ 购买成功！</span>
-                      </>
-                    )}
-                    {purchaseState.step === 'error' && (
-                      <>
-                        <span className="text-red-300">❌ 购买失败</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              )}
+
 
               {/* 按钮 */}
               <div className="flex gap-3">
                 <Button
                   onClick={() => {
-                    setShowPurchaseModal(false)
+                    setShowPurchaseDialog(false)
                     setSelectedTemplate(null)
-                    resetPurchaseState()
                   }}
                   variant="ghost"
                   className="flex-1"
@@ -597,20 +1042,31 @@ export const Store: React.FC = () => {
                   onClick={handleConfirmPurchase}
                   variant="primary"
                   className="flex-1"
-                  disabled={isPurchasing || !hasEnoughBalance(selectedTemplate.price || 100)}
+                  disabled={isPurchasing}
+                  loading={isPurchasing}
                 >
-                  {isPurchasing ? (
-                    <LoadingSpinner size="sm" />
-                  ) : !hasEnoughBalance(selectedTemplate.price || 100) ? (
-                    '余额不足'
-                  ) : (
-                    '确认购买'
-                  )}
+                  确认购买
                 </Button>
               </div>
             </div>
           </div>
         )}
+
+        {/* 出售 NFT 对话框 */}
+        {showSellDialog && selectedNFT && (
+          <SellNFTDialog
+            nft={selectedNFT}
+            isOpen={showSellDialog}
+            onClose={() => {
+              setShowSellDialog(false)
+              setSelectedNFT(null)
+            }}
+            onSuccess={handleSellSuccess}
+          />
+        )}
+
+        {/* RPC 监控组件 - 仅在开发环境显示 */}
+        {process.env.NODE_ENV === 'development' && <RPCMonitor />}
       </div>
     </div>
   )

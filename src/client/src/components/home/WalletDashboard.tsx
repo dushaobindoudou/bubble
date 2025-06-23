@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useAccount, useBalance } from 'wagmi'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '../../contexts/AuthContext'
 import { useTokenBalance } from '../../hooks/useTokenBalance'
-import { useNFTSkins } from '../../hooks/useNFTSkins'
 import { AnimatedBubble } from '../ui/AnimatedBubble'
 import { Button } from '../ui/Button'
 import { LoadingSpinner } from '../ui/LoadingSpinner'
+import { PopularSkins } from './PopularSkins'
 
 export const WalletDashboard: React.FC = () => {
   const { user } = useAuth()
@@ -17,7 +17,6 @@ export const WalletDashboard: React.FC = () => {
 
   // Use custom hooks for Web3 data
   const { balance: bubBalance, isLoading: isLoadingBUB, refreshBalance } = useTokenBalance()
-  const { skins: nftSkins, isLoading: isLoadingNFTs, refreshSkins } = useNFTSkins()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   // Copy address to clipboard
@@ -36,10 +35,7 @@ export const WalletDashboard: React.FC = () => {
   const refreshBalances = async () => {
     setIsRefreshing(true)
     try {
-      await Promise.all([
-        refreshBalance(),
-        refreshSkins()
-      ])
+      await refreshBalance()
       toast.success('余额已刷新')
     } catch (error) {
       toast.error('刷新失败')
@@ -48,25 +44,7 @@ export const WalletDashboard: React.FC = () => {
     }
   }
 
-  const getRarityColor = (rarity: string) => {
-    switch (rarity) {
-      case 'LEGENDARY': return 'from-yellow-400 to-orange-500'
-      case 'EPIC': return 'from-purple-400 to-pink-500'
-      case 'RARE': return 'from-blue-400 to-cyan-500'
-      case 'COMMON': return 'from-gray-400 to-gray-500'
-      default: return 'from-gray-400 to-gray-500'
-    }
-  }
 
-  const getRarityText = (rarity: string) => {
-    switch (rarity) {
-      case 'LEGENDARY': return '传说'
-      case 'EPIC': return '史诗'
-      case 'RARE': return '稀有'
-      case 'COMMON': return '普通'
-      default: return '未知'
-    }
-  }
 
   if (user?.isGuest) {
     return (
@@ -160,57 +138,8 @@ export const WalletDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* NFT Collection */}
-      <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-white flex items-center gap-2">
-            <span className="text-xl">🎨</span>
-            NFT 皮肤收藏 ({nftSkins.length})
-          </h3>
-        </div>
-
-        {isLoadingNFTs ? (
-          <div className="flex justify-center py-8">
-            <LoadingSpinner size="lg" />
-          </div>
-        ) : nftSkins.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {nftSkins.map((skin) => (
-              <div
-                key={skin.tokenId}
-                className="bg-white/5 rounded-2xl p-4 border border-white/10 hover:bg-white/10 transition-all duration-200 group"
-              >
-                <div className="aspect-square mb-3 bg-gradient-to-br from-white/10 to-white/5 rounded-xl flex items-center justify-center">
-                  <AnimatedBubble
-                    size={48}
-                    gradient={skin.effectType === 'RAINBOW' ? 'rainbow' :
-                             skin.effectType === 'LIGHTNING' ? 'purple' :
-                             skin.effectType === 'FLAME' ? 'pink' :
-                             skin.effectType === 'GLOW' ? 'cyan' : 'blue'}
-                    opacity={0.8}
-                    animationType="pulse"
-                  />
-                </div>
-                <h4 className="text-white font-semibold text-sm mb-1">{skin.name}</h4>
-                <div className={`inline-block px-2 py-1 rounded-full text-xs font-bold text-white bg-gradient-to-r ${getRarityColor(skin.rarity)} mb-2`}>
-                  {getRarityText(skin.rarity)}
-                </div>
-                <div className="text-xs text-white/60">
-                  #{skin.serialNumber} • Token #{skin.tokenId}
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-8">
-            <div className="mb-4">
-              <AnimatedBubble size={48} gradient="blue" opacity={0.5} />
-            </div>
-            <p className="text-white/70">暂无 NFT 皮肤</p>
-            <p className="text-white/50 text-sm mt-2">在游戏中获得或在市场购买皮肤</p>
-          </div>
-        )}
-      </div>
+      {/* Popular Skins Recommendation */}
+      <PopularSkins />
     </div>
   )
 }

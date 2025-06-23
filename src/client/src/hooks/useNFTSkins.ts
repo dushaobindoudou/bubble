@@ -34,14 +34,15 @@ export const useNFTSkins = () => {
   // Check if contract is deployed
   const contractDeployed = isContractDeployed('BubbleSkinNFT')
 
-  // Get user's NFT token IDs
+  // Get user's NFT token IDs - 优化缓存策略
   const { data: userTokenIds, isLoading: isLoadingTokens, error: tokensError, refetch: refetchTokens } = useContractRead({
     address: BUBBLE_SKIN_NFT_ADDRESS,
     abi: BUBBLE_SKIN_NFT_ABI,
     functionName: 'getUserSkins',
     args: address ? [address] : undefined,
     enabled: !!address && contractDeployed,
-    watch: true,
+    cacheTime: 60_000, // 缓存1分钟
+    staleTime: 30_000, // 30秒内认为数据是新鲜的
   })
 
   // Prepare contract calls for skin info (includes both template and skin data)
@@ -59,18 +60,20 @@ export const useNFTSkins = () => {
     args: [tokenId],
   }))
 
-  // Get skin info for all user tokens
+  // Get skin info for all user tokens - 优化缓存策略
   const { data: skinInfoData, isLoading: isLoadingInfo, refetch: refetchInfo } = useContractReads({
     contracts: skinInfoCalls,
     enabled: !!userTokenIds && userTokenIds.length > 0,
-    watch: true,
+    cacheTime: 120_000, // 缓存2分钟，NFT元数据变化较少
+    staleTime: 60_000,
   })
 
-  // Get token URIs for all user tokens
+  // Get token URIs for all user tokens - 优化缓存策略
   const { data: tokenURIs, isLoading: isLoadingURIs, refetch: refetchURIs } = useContractReads({
     contracts: tokenURICalls,
     enabled: !!userTokenIds && userTokenIds.length > 0,
-    watch: true,
+    cacheTime: 300_000, // URI很少变化，缓存5分钟
+    staleTime: 300_000,
   })
 
   useEffect(() => {
