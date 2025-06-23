@@ -64,7 +64,7 @@ class RainbowKitConfig {
             // Configure connectors
             const { connectors } = window.RainbowKit.getDefaultWallets({
                 appName: 'Bubble Brawl',
-                projectId: 'bubble-brawl-web3-game', // You should get a real project ID from WalletConnect
+                projectId: '41b3ec9f59acc46cbcb252b126606400', // You should get a real project ID from WalletConnect
                 chains,
             });
 

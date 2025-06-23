@@ -31,7 +31,11 @@
     "update-client-contracts": "node scripts/update-client-contracts.js",
     "deploy:monad-with-client": "npm run deploy:monad-gas-fix && npm run update-client-contracts",
     "test:client-auth": "node scripts/test-client-auth.js",
-    "serve:client": "node scripts/serve-client.js",
+    "serve:client": "cd src/client && npm run dev",
+    "serve:client:legacy": "node scripts/serve-client.js",
+    "build:client": "cd src/client && npm run build",
+    "preview:client": "cd src/client && npm run preview",
+    "install:client": "cd src/client && npm install",
     "node": "hardhat node",
     "console": "hardhat console",
     "console:monad": "hardhat console --network monadTestnet",
@@ -50,8 +54,7 @@
     }
   ],
   "license": "MIT",
-  "contributors": [
-  ],
+  "contributors": [],
   "dependencies": {
     "@babel/core": "^7.21.8",
     "@babel/eslint-parser": "^7.21.8",
@@ -61,6 +64,7 @@
     "dotenv": "^16.5.0",
     "eslint": "^8.40.0",
     "eslint-plugin-import": "^2.27.5",
+    "ethers": "^6.14.3",
     "express": "^4.18.2",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",

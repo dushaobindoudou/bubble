@@ -383,7 +383,16 @@ class BubbleBrawlWeb3 {
         this.web3Auth.disconnect();
         this.gameStarted = false;
         
-        // Return to start menu
+        // 🔥 新增：触发自定义事件通知 React 应用用户退出
+        const logoutEvent = new CustomEvent('bubble-brawl-logout', {
+            detail: {
+                reason: 'user_initiated',
+                timestamp: Date.now()
+            }
+        });
+        window.dispatchEvent(logoutEvent);
+        
+        // Return to start menu (保留原有逻辑作为备用)
         document.getElementById('gameAreaWrapper').style.opacity = 0;
         document.getElementById('startMenuWrapper').style.maxHeight = '1000px';
         
@@ -403,6 +412,15 @@ class BubbleBrawlWeb3 {
         if (claimBtn) {
             claimBtn.remove();
         }
+        
+        // 🔥 新增：延迟后强制跳转到登录页面（备用方案）
+        setTimeout(() => {
+            // 检查是否在 React 环境中
+            if (window.location.pathname !== '/login') {
+                console.log('🔄 强制跳转到登录页面');
+                window.location.href = '/login';
+            }
+        }, 1000);
     }
 
     /**

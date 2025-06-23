@@ -1,266 +1,326 @@
-<!doctype html>
-<html lang="zh-CN">
+<!DOCTYPE html>
+<html lang="en" class="dark">
 <head>
-    <!-- Meta Properties -->
-    <meta charset="UTF-8">
-    <title>🫧 Bubble Brawl - 泡泡大作战</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <meta name="description" content="泡泡大作战 - 多人在线竞技游戏，体验可爱泡泡世界的激烈对战！">
-    <meta name="keywords" content="泡泡大作战,多人游戏,在线游戏,竞技游戏,泡泡,Bubble Brawl">
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/main.css" />
-    <link rel="stylesheet" href="css/auth.css" />
-    <!-- Audio -->
-    <audio id="split_cell" src="audio/split.mp3"></audio>
-    <audio id="spawn_cell" src="audio/spawn.mp3"></audio>
+  <!-- Basic Meta Tags -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
+  <!-- Primary Meta Tags -->
+  <title>Bubble Brawl - Web3 Multiplayer Game | Monad Testnet</title>
+  <meta name="title" content="Bubble Brawl - Web3 Multiplayer Game | Monad Testnet" />
+  <meta name="description" content="Experience the ultimate Web3 multiplayer bubble battle game on Monad Testnet. Connect with 36+ EVM wallets, earn NFT rewards, and compete in decentralized gaming tournaments." />
+  <meta name="keywords" content="Web3 game, blockchain gaming, Monad testnet, NFT rewards, multiplayer game, bubble battle, EVM wallets, DeFi gaming, crypto game" />
+  <meta name="author" content="Bubble Brawl Team" />
+  <meta name="robots" content="index, follow" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://bubble-brawl.game/" />
+  <meta property="og:title" content="Bubble Brawl - Web3 Multiplayer Game | Monad Testnet" />
+  <meta property="og:description" content="Experience the ultimate Web3 multiplayer bubble battle game on Monad Testnet. Connect with 36+ EVM wallets, earn NFT rewards, and compete in decentralized gaming tournaments." />
+  <meta property="og:image" content="https://bubble-brawl.game/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Bubble Brawl" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://bubble-brawl.game/" />
+  <meta property="twitter:title" content="Bubble Brawl - Web3 Multiplayer Game | Monad Testnet" />
+  <meta property="twitter:description" content="Experience the ultimate Web3 multiplayer bubble battle game on Monad Testnet. Connect with 36+ EVM wallets, earn NFT rewards, and compete in decentralized gaming tournaments." />
+  <meta property="twitter:image" content="https://bubble-brawl.game/twitter-image.png" />
+  <meta property="twitter:creator" content="@BubbleBrawlGame" />
+  
+  <!-- Web3 & Gaming Specific Meta Tags -->
+  <meta name="web3-game" content="true" />
+  <meta name="blockchain" content="Monad Testnet" />
+  <meta name="chain-id" content="10143" />
+  <meta name="wallet-support" content="MetaMask, Rainbow, Coinbase, WalletConnect, Trust, Phantom, and 30+ more" />
+  <meta name="game-type" content="multiplayer, battle, NFT rewards" />
+  
+  <!-- Mobile Web App Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Bubble Brawl" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="Bubble Brawl" />
+  
+  <!-- Theme Colors -->
+  <meta name="theme-color" content="#667eea" />
+  <meta name="msapplication-TileColor" content="#667eea" />
+  <meta name="msapplication-navbutton-color" content="#667eea" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  
+  <!-- Icons & Manifest -->
+  <link rel="icon" type="image/svg+xml" href="/bubble-icon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#667eea" />
+  <link rel="manifest" href="/site.webmanifest" />
+  
+  <!-- Preconnect for Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://testnet-rpc.monad.xyz" />
+  <link rel="preconnect" href="https://testnet.monadexplorer.com" />
+  
+  <!-- Google Fonts - Orbitron for Gaming UI -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <!-- DNS Prefetch for Web3 Services -->
+  <link rel="dns-prefetch" href="//bridge.walletconnect.org" />
+  <link rel="dns-prefetch" href="//registry.walletconnect.com" />
+  <link rel="dns-prefetch" href="//rpc.walletconnect.com" />
+  
+  <!-- Content Security Policy for Web3 -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com https://bridge.walletconnect.org;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com;
+    font-src 'self' https://fonts.gstatic.com;
+    img-src 'self' data: https: blob:;
+    connect-src 'self' https: wss: data:;
+    frame-src 'self' https:;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+  " />
+  
+  <!-- CSS Custom Properties for Bubble Theme -->
+  <style>
+    :root {
+      /* Bubble Brawl Brand Colors */
+      --bubble-primary: #667eea;
+      --bubble-secondary: #764ba2;
+      --bubble-accent: #f093fb;
+      --bubble-success: #10b981;
+      --bubble-warning: #f59e0b;
+      --bubble-error: #ef4444;
+      --bubble-info: #3b82f6;
+      
+      /* Gradient Backgrounds */
+      --bubble-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --bubble-gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --bubble-gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --bubble-gradient-dark: linear-gradient(135deg, #2d1b69 0%, #11998e 100%);
+      
+      /* Glass Morphism Effects */
+      --bubble-glass-bg: rgba(255, 255, 255, 0.1);
+      --bubble-glass-border: rgba(255, 255, 255, 0.2);
+      --bubble-glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      --bubble-backdrop-blur: blur(20px);
+      
+      /* Typography */
+      --bubble-font-primary: 'Orbitron', monospace;
+      --bubble-font-weight-normal: 400;
+      --bubble-font-weight-medium: 500;
+      --bubble-font-weight-semibold: 600;
+      --bubble-font-weight-bold: 700;
+      --bubble-font-weight-extrabold: 800;
+      --bubble-font-weight-black: 900;
+      
+      /* Spacing & Sizing */
+      --bubble-border-radius: 16px;
+      --bubble-border-radius-lg: 24px;
+      --bubble-border-radius-xl: 32px;
+      --bubble-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --bubble-transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* Z-Index Layers */
+      --bubble-z-dropdown: 1000;
+      --bubble-z-sticky: 1020;
+      --bubble-z-fixed: 1030;
+      --bubble-z-modal-backdrop: 1040;
+      --bubble-z-modal: 1050;
+      --bubble-z-popover: 1060;
+      --bubble-z-tooltip: 1070;
+      --bubble-z-toast: 1080;
+    }
+    
+    /* Base Styles */
+    * {
+      box-sizing: border-box;
+    }
+    
+    html {
+      font-family: var(--bubble-font-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: var(--bubble-gradient-dark);
+      color: white;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    
+    /* Loading Screen */
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bubble-gradient-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+    
+    #loading-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .bubble-loader {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid var(--bubble-primary);
+      border-radius: 50%;
+      animation: bubble-spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    
+    @keyframes bubble-spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      color: white;
+      font-size: 18px;
+      font-weight: var(--bubble-font-weight-semibold);
+      margin-bottom: 10px;
+    }
+    
+    .loading-subtext {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      font-weight: var(--bubble-font-weight-normal);
+    }
+    
+    /* React Root */
+    #react-root {
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    /* Accessibility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    
+    /* Focus Styles for Accessibility */
+    *:focus {
+      outline: 2px solid var(--bubble-primary);
+      outline-offset: 2px;
+    }
+    
+    /* Mobile Optimizations */
+    @media (max-width: 768px) {
+      body {
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .bubble-loader {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .loading-text {
+        font-size: 16px;
+      }
+      
+      .loading-subtext {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div id="gameAreaWrapper">
-        <div id="status"><span class="title">🏆 排行榜</span></div>
-        <div class="chatbox" id="chatbox">
-            <ul id="chatList" class="chat-list"></ul>
-            <input id="chatInput" type="text" class="chat-input" placeholder="在这里聊天..." maxlength="35" />
-        </div>
-        <div id="mobile">
-           <input type="image" id="split" class="split" src="img/split.png" alt="加速按钮">
-           <input type="image" id="feed" class="feed" src="img/feed.png" alt="喂食按钮">
-        </div>
-        <canvas tabindex="1" id="cvs"></canvas>
-    </div>
-    <div id="startMenuWrapper">
-        <div id="startMenu">
-            <p>🫧 泡泡大作战</p>
-            <input type="text" tabindex="0" autofocus placeholder="输入你的昵称" id="playerNameInput" maxlength="25" />
-            <b class="input-error">昵称只能包含字母、数字和下划线！</b>
-            <br />
-            <a onclick="document.getElementById('spawn_cell').play();"><button id="startButton">🚀 开始游戏</button></a>
-            <button id="spectateButton">👀 观战模式</button>
-            <button id="settingsButton">⚙️ 游戏设置</button>
-            <br />
-            <div id="settings">
-                <h3>🎮 游戏设置</h3>
-                <ul>
-                    <label><input id="visBord" type="checkbox">显示游戏边界</label>
-                    <label><input id="showMass" type="checkbox">显示泡泡体积</label>
-                    <br />
-                    <label><input id="continuity" type="checkbox">鼠标离开屏幕时继续移动</label>
-                    <br />
-                    <label><input id="roundFood" type="checkbox" checked>圆形能量点</label>
-                    <label><input id="darkMode" type="checkbox">夜间模式</label>
-                </ul>
-            </div>
-            <div id="instructions">
-                <h3>🎯 游戏玩法</h3>
-                <ul>
-                    <li>移动鼠标控制你的泡泡在屏幕上移动</li>
-                    <li>吃掉能量点和其他玩家来让你的泡泡变大</li>
-                    <li>泡泡的体积决定了你的实力和排名</li>
-                    <li>目标：成为最大的泡泡，吞噬所有对手！</li>
-                    <li>按住鼠标右键或空格键使用加速技能</li>
-                    <li>按W键或点击喂食按钮释放能量点</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <!-- JS -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="js/session-manager.js"></script>
-    <script src="js/cdn-loader.js"></script>
-    <script>
-        // Check authentication before loading game
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎮 Initializing Bubble Brawl Game...');
-
-            // Initialize session manager
-            window.sessionManager = new SessionManager();
-
-            // Check if user is authenticated
-            if (!window.sessionManager.hasValidSession()) {
-                console.log('❌ No valid session found, redirecting to login...');
-                window.location.href = 'login.html';
-                return;
-            }
-
-            const session = window.sessionManager.getCurrentSession();
-            console.log('✅ Valid session found:', {
-                address: session.address,
-                loginMethod: session.loginMethod,
-                isGuest: session.isGuest
-            });
-
-            // Load game components based on login method
-            if (session.isGuest) {
-                console.log('👤 Loading game in guest mode...');
-                loadGameComponents(false); // No Web3
-            } else {
-                console.log('🔗 Loading game with Web3 support...');
-                loadGameComponents(true); // With Web3
-            }
-        });
-
-        function loadGameComponents(withWeb3) {
-            if (withWeb3) {
-                // Load ethers.js and Web3 components
-                window.cdnLoader.loadEthers().then(() => {
-                    console.log('🫧 Ethers.js loaded successfully, initializing Web3...');
-
-                    const scripts = [
-                        'js/web3-config.js',
-                        'js/web3-auth.js',
-                        'js/auth-ui.js',
-                        'js/web3-integration.js',
-                        'js/app.js'
-                    ];
-
-                    loadScriptsSequentially(scripts).then(() => {
-                        console.log('🎉 All Web3 components loaded successfully!');
-                        initializeGame(true);
-                    }).catch(error => {
-                        console.error('❌ Failed to load Web3 components:', error);
-                        // Fallback to guest mode
-                        loadGameComponents(false);
-                    });
-
-                }).catch(error => {
-                    console.error('❌ Failed to load ethers.js:', error);
-                    // Fallback to guest mode
-                    loadGameComponents(false);
-                });
-            } else {
-                // Load only game components (no Web3)
-                console.log('🎮 Loading game in traditional mode...');
-                loadScriptsSequentially(['js/app.js']).then(() => {
-                    console.log('🎉 Game loaded successfully!');
-                    initializeGame(false);
-                }).catch(error => {
-                    console.error('❌ Failed to load game:', error);
-                    showGameLoadError();
-                });
-            }
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="bubble-loader" aria-hidden="true"></div>
+    <div class="loading-text">Bubble Brawl</div>
+    <div class="loading-subtext">Connecting to Web3...</div>
+  </div>
+  
+  <!-- Screen Reader Announcements -->
+  <div id="sr-announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  
+  <!-- Main React Application Root -->
+  <div id="react-root" role="main">
+    <!-- React app will be mounted here -->
+  </div>
+  
+  <!-- Vite React Application Entry Point -->
+  <script type="module" src="/src/main.tsx"></script>
+  
+  <!-- Loading Screen Controller -->
+  <script>
+    // Hide loading screen when React app is ready
+    window.addEventListener('DOMContentLoaded', function() {
+      // Wait for React to mount and then hide loading screen
+      setTimeout(function() {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+          loadingScreen.classList.add('hidden');
+          setTimeout(function() {
+            loadingScreen.remove();
+          }, 500);
         }
-
-        function loadScriptsSequentially(scripts) {
-            return scripts.reduce((promise, script) => {
-                return promise.then(() => {
-                    return new Promise((resolve, reject) => {
-                        const scriptElement = document.createElement('script');
-                        scriptElement.src = script;
-                        scriptElement.onload = resolve;
-                        scriptElement.onerror = reject;
-                        document.head.appendChild(scriptElement);
-                    });
-                });
-            }, Promise.resolve());
-        }
-
-        function initializeGame(hasWeb3) {
-            // Set player name based on session
-            const session = window.sessionManager.getCurrentSession();
-            const playerNameInput = document.getElementById('playerNameInput');
-
-            if (playerNameInput) {
-                if (session.isGuest) {
-                    playerNameInput.value = `Guest_${Date.now().toString().slice(-4)}`;
-                } else if (session.address) {
-                    playerNameInput.value = `Player_${session.address.slice(-4)}`;
-                }
-            }
-
-            // Add logout functionality
-            addLogoutButton();
-
-            console.log(`🎮 Game initialized with ${hasWeb3 ? 'Web3' : 'traditional'} mode`);
-        }
-
-        function addLogoutButton() {
-            const startMenu = document.getElementById('startMenu');
-            if (startMenu) {
-                const logoutBtn = document.createElement('button');
-                logoutBtn.innerHTML = '🚪 退出登录';
-                logoutBtn.style.cssText = `
-                    background: linear-gradient(135deg, #ff4757, #c44569);
-                    color: white;
-                    border: none;
-                    padding: 12px 24px;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    margin: 10px 0;
-                    transition: all 0.2s;
-                    width: 200px;
-                `;
-
-                logoutBtn.addEventListener('click', () => {
-                    if (confirm('确定要退出登录吗？')) {
-                        window.sessionManager.clearSession();
-                        window.location.href = 'login.html';
-                    }
-                });
-
-                logoutBtn.addEventListener('mouseenter', () => {
-                    logoutBtn.style.transform = 'translateY(-2px)';
-                    logoutBtn.style.boxShadow = '0 8px 20px rgba(255, 71, 87, 0.4)';
-                });
-
-                logoutBtn.addEventListener('mouseleave', () => {
-                    logoutBtn.style.transform = 'translateY(0)';
-                    logoutBtn.style.boxShadow = 'none';
-                });
-
-                startMenu.appendChild(logoutBtn);
-            }
-        }
-
-        function showGameLoadError() {
-            const errorDiv = document.createElement('div');
-            errorDiv.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.9);
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10000;
-                font-family: Arial, sans-serif;
-                text-align: center;
-                padding: 20px;
-                box-sizing: border-box;
-            `;
-
-            errorDiv.innerHTML = `
-                <div>
-                    <h2>🚫 游戏加载失败</h2>
-                    <p>无法加载游戏组件，请检查网络连接。</p>
-                    <button onclick="location.reload()" style="
-                        background: #007bff;
-                        color: white;
-                        border: none;
-                        padding: 10px 20px;
-                        border-radius: 5px;
-                        cursor: pointer;
-                        font-size: 16px;
-                        margin: 10px;
-                    ">🔄 刷新页面</button>
-                    <button onclick="window.location.href='login.html'" style="
-                        background: #6c757d;
-                        color: white;
-                        border: none;
-                        padding: 10px 20px;
-                        border-radius: 5px;
-                        cursor: pointer;
-                        font-size: 16px;
-                        margin: 10px;
-                    ">🔙 返回登录</button>
-                </div>
-            `;
-
-            document.body.appendChild(errorDiv);
-        }
-    </script>
+      }, 1000);
+    });
+    
+    // Accessibility announcements
+    function announceToScreenReader(message) {
+      const announcements = document.getElementById('sr-announcements');
+      if (announcements) {
+        announcements.textContent = message;
+      }
+    }
+    
+    // Make announcement function globally available
+    window.announceToScreenReader = announceToScreenReader;
+    
+    // Prevent zoom on mobile
+    document.addEventListener('gesturestart', function (e) {
+      e.preventDefault();
+    });
+    
+    // Prevent double-tap zoom
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+      const now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+  </script>
 </body>
 </html>
