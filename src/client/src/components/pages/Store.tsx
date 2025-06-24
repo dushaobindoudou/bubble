@@ -14,8 +14,11 @@ import { EnhancedContentPreview } from '../ui/EnhancedContentPreview'
 import { NFTListingCard } from '../marketplace/NFTListingCard'
 import { SellNFTDialog } from '../marketplace/SellNFTDialog'
 import { RPCMonitor } from '../debug/RPCMonitor'
+import { CONTRACT_ADDRESSES } from '../../config/contracts'
 import { toast } from 'react-hot-toast'
 import { useDebounce } from '../../utils/rpcOptimization'
+import '../../utils/contractDebug' // 导入合约调试工具
+import '../../utils/marketplaceDebug' // 导入 Marketplace 调试工具
 
 // 用户 NFT 卡片组件
 interface UserNFTCardProps {
@@ -398,22 +401,48 @@ const SkinCard: React.FC<SkinCardProps> = ({
   )
 }
 
+// Helper function to safely serialize objects with BigInt values
+const safeStringify = (obj: any): string => {
+  if (!obj) return '无'
+  try {
+    return JSON.stringify(obj, (key, value) =>
+      typeof value === 'bigint' ? value.toString() : value
+    )
+  } catch (error) {
+    return `序列化错误: ${error instanceof Error ? error.message : '未知错误'}`
+  }
+}
+
 export const Store: React.FC = () => {
   const { address } = useAccount()
-  const { templates, isLoadingTemplates, refreshTemplates } = useSkinAdmin()
-  const { purchaseSkin, isLoading: isPurchasing } = useSkinPurchase()
+  const { templates, isLoadingTemplates } = useSkinAdmin()
+  const { purchaseSkin, isPurchasing } = useSkinPurchase()
+  const { balance: bubBalance } = useTokenBalance()
+  const { skins: userNFTs, isLoading: isLoadingNFTs, refreshSkins } = useNFTSkins()
+
+  const [activeTab, setActiveTab] = useState<'marketplace' | 'templates' | 'mynfts'>('marketplace')
+
   const {
     listings,
     userListings,
     marketStats,
     buyNFT,
     isBuying,
+    isLoading: isLoadingMarketplace,
+    error: marketplaceError,
     refreshData: refreshMarketplace
   } = useMarketplace()
-  const { balance: bubBalance } = useTokenBalance()
-  const { skins: userNFTs, isLoading: isLoadingNFTs, refreshSkins } = useNFTSkins()
 
-  const [activeTab, setActiveTab] = useState<'marketplace' | 'templates' | 'mynfts'>('marketplace')
+  // 调试信息
+  console.log('Store Debug Info:', {
+    activeTab,
+    listings: listings.length,
+    userListings: userListings.length,
+    marketStats,
+    marketplaceError,
+    userNFTs: userNFTs.length,
+    templates: templates.length,
+  })
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null)
   const [selectedListing, setSelectedListing] = useState<any>(null)
   const [selectedNFT, setSelectedNFT] = useState<NFTSkin | null>(null)
@@ -445,12 +474,20 @@ export const Store: React.FC = () => {
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'price':
-          return Number(a.price - b.price)
+          // 安全地处理 BigInt 类型的价格比较
+          const priceA = typeof a.price === 'bigint' ? Number(a.price) : a.price
+          const priceB = typeof b.price === 'bigint' ? Number(b.price) : b.price
+          return priceA - priceB
         case 'rarity':
           // 这里需要从 NFT 元数据获取稀有度，暂时按价格排序
-          return Number(b.price - a.price)
+          const priceA_rarity = typeof a.price === 'bigint' ? Number(a.price) : a.price
+          const priceB_rarity = typeof b.price === 'bigint' ? Number(b.price) : b.price
+          return priceB_rarity - priceA_rarity
         default:
-          return a.tokenId - b.tokenId
+          // 安全地处理 tokenId 比较
+          const tokenIdA = typeof a.tokenId === 'bigint' ? Number(a.tokenId) : a.tokenId
+          const tokenIdB = typeof b.tokenId === 'bigint' ? Number(b.tokenId) : b.tokenId
+          return tokenIdA - tokenIdB
       }
     })
 
@@ -539,7 +576,8 @@ export const Store: React.FC = () => {
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'price':
-          return (a.price || 100) - (b.price || 100)
+          // 皮肤模板没有价格字段，按模板ID排序
+          return a.templateId - b.templateId
         case 'rarity':
           const rarityOrder = { 'COMMON': 0, 'RARE': 1, 'EPIC': 2, 'LEGENDARY': 3 }
           return rarityOrder[b.rarity as keyof typeof rarityOrder] - rarityOrder[a.rarity as keyof typeof rarityOrder]
@@ -556,9 +594,9 @@ export const Store: React.FC = () => {
     try {
       await buyNFT(listingId)
       // 刷新数据
-      setTimeout(() => {
-        refreshMarketplace()
-      }, 2000)
+    //   setTimeout(() => {
+    //     refreshMarketplace()
+    //   }, 2000)
     } catch (error) {
       console.error('Buy NFT error:', error)
     }
@@ -579,9 +617,9 @@ export const Store: React.FC = () => {
       setShowPurchaseDialog(false)
       setSelectedTemplate(null)
       // 刷新数据
-      setTimeout(() => {
-        refreshTemplates()
-      }, 2000)
+      // setTimeout(() => {
+      //   refreshTemplates()
+      // }, 2000)
     } catch (error) {
       console.error('Purchase template error:', error)
     }
@@ -608,7 +646,7 @@ export const Store: React.FC = () => {
     try {
       await Promise.all([
         refreshMarketplace(),
-        refreshTemplates(),
+        // refreshTemplates(), // 模板数据不需要刷新
         refreshSkins()
       ])
       toast.success('数据刷新成功')
@@ -698,7 +736,7 @@ export const Store: React.FC = () => {
                   <span className="sm:hidden">市场</span>
                   {marketStats && (
                     <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
-                      {marketStats.activeListings}
+                      {typeof marketStats.activeListings === 'bigint' ? Number(marketStats.activeListings) : marketStats.activeListings}
                     </span>
                   )}
                 </button>
@@ -755,7 +793,7 @@ export const Store: React.FC = () => {
                       <div>
                         <div className="text-white font-semibold">市场统计</div>
                         <div className="text-white/70 text-sm">
-                          {marketStats.activeListings} 个挂单 • 总成交 {marketStats.totalSales}
+                          {typeof marketStats.activeListings === 'bigint' ? Number(marketStats.activeListings) : marketStats.activeListings} 个挂单 • 总成交 {typeof marketStats.totalSales === 'bigint' ? Number(marketStats.totalSales) : marketStats.totalSales}
                         </div>
                       </div>
                     </div>
@@ -886,11 +924,40 @@ export const Store: React.FC = () => {
             {activeTab === 'marketplace' ? (
               /* NFT 市场 */
               <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
-                {listings.length === 0 ? (
+                {isLoadingMarketplace ? (
+                  <div className="text-center py-12">
+                    <LoadingSpinner size="lg" />
+                    <div className="mt-4 text-white/70">正在加载 NFT 市场数据...</div>
+                  </div>
+                ) : marketplaceError ? (
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">⚠️</div>
+                    <h3 className="text-xl font-semibold text-white mb-2">加载市场数据失败</h3>
+                    <p className="text-white/70 mb-4">{marketplaceError}</p>
+                    <Button
+                      onClick={refreshMarketplace}
+                      variant="primary"
+                      className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+                    >
+                      🔄 重试
+                    </Button>
+                  </div>
+                ) : listings.length === 0 ? (
                   <div className="text-center py-12">
                     <div className="text-6xl mb-4">🏪</div>
                     <h3 className="text-xl font-semibold text-white mb-2">暂无 NFT 挂单</h3>
-                    <p className="text-white/70">市场上还没有 NFT 皮肤在售</p>
+                    <p className="text-white/70 mb-4">市场上还没有 NFT 皮肤在售</p>
+
+                    {/* 开发环境调试信息 */}
+                    {process.env.NODE_ENV === 'development' && (
+                      <div className="mt-4 p-4 bg-black/20 rounded-xl text-left text-xs text-white/60">
+                        <div>调试信息:</div>
+                        <div>• 合约地址: {CONTRACT_ADDRESSES.Marketplace}</div>
+                        <div>• 挂单数量: {listings.length}</div>
+                        <div>• 市场统计: {safeStringify(marketStats)}</div>
+                        <div>• 错误信息: {marketplaceError || '无'}</div>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

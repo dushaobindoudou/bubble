@@ -6,7 +6,7 @@ import { EnhancedContentPreview } from '../ui/EnhancedContentPreview'
 import { Button } from '../ui/Button'
 import { LoadingSpinner } from '../ui/LoadingSpinner'
 import { CONTRACT_ADDRESSES } from '../../config/contracts'
-import BubbleSkinNFTABI from '../../contracts/abis/BubbleSkinNFT.json'
+import { BubbleSkinNFTABI } from '../../config/contracts'
 
 interface NFTListingCardProps {
   listing: MarketplaceListing
@@ -27,6 +27,7 @@ interface NFTMetadata {
   content: string
   serialNumber: number
   mintedAt: number
+  originalOwner: string
 }
 
 export const NFTListingCard: React.FC<NFTListingCardProps> = ({
@@ -42,36 +43,74 @@ export const NFTListingCard: React.FC<NFTListingCardProps> = ({
   const [nftMetadata, setNftMetadata] = useState<NFTMetadata | null>(null)
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(true)
 
-  // 获取 NFT 元数据 - NFT元数据很少变化，缓存更久
-  const { data: skinTemplateData } = useContractRead({
+  // 第一步：获取 NFT 完整信息（包含模板信息和皮肤信息）
+  const { data: skinInfoData, error: skinInfoError } = useContractRead({
     address: CONTRACT_ADDRESSES.BubbleSkinNFT as `0x${string}`,
-    abi: BubbleSkinNFTABI.abi,
-    functionName: 'getSkinTemplate',
+    abi: BubbleSkinNFTABI,
+    functionName: 'getSkinInfo',
     args: [listing.tokenId],
     enabled: !!listing.tokenId,
     cacheTime: 300_000, // 缓存5分钟
     staleTime: 300_000,
   })
 
+  // 调试信息
+  console.log('NFTListingCard Debug:', {
+    listingId: listing.listingId,
+    tokenId: listing.tokenId,
+    skinInfoData,
+    skinInfoError,
+    contractAddress: CONTRACT_ADDRESSES.BubbleSkinNFT,
+  })
+
   useEffect(() => {
-    if (skinTemplateData) {
-      const [templateId, name, description, rarity, effectType, content, serialNumber, mintedAt] = skinTemplateData as [
-        number, string, string, string, string, string, number, number
-      ]
-      
-      setNftMetadata({
-        templateId,
-        name,
-        description,
-        rarity,
-        effectType,
-        content,
-        serialNumber,
-        mintedAt
-      })
+    if (skinInfoData) {
+      try {
+        // getSkinInfo 返回 [template, skinInfo] 元组
+        const [template, skinInfo] = skinInfoData as [any, any]
+
+        // 从模板中提取信息
+        const {
+          templateId,
+          name,
+          description,
+          rarity,
+          effectType,
+          content
+        } = template
+
+        // 从皮肤信息中提取信息
+        const {
+          mintedAt,
+          originalOwner,
+          serialNumber
+        } = skinInfo
+
+        // 转换稀有度枚举值为字符串
+        const rarityMap = ['COMMON', 'RARE', 'EPIC', 'LEGENDARY']
+        const effectTypeMap = ['NONE', 'GLOW', 'SPARKLE', 'RAINBOW', 'LIGHTNING', 'BUBBLE', 'FLAME']
+
+        setNftMetadata({
+          templateId: Number(templateId),
+          name,
+          description,
+          rarity: rarityMap[rarity] || 'COMMON',
+          effectType: effectTypeMap[effectType] || 'NONE',
+          content,
+          serialNumber: Number(serialNumber),
+          mintedAt: Number(mintedAt),
+          originalOwner
+        })
+        setIsLoadingMetadata(false)
+      } catch (error) {
+        console.error('Error parsing NFT data:', error)
+        setIsLoadingMetadata(false)
+      }
+    } else if (skinInfoError) {
+      console.error('Error fetching NFT info:', skinInfoError)
       setIsLoadingMetadata(false)
     }
-  }, [skinTemplateData])
+  }, [skinInfoData, skinInfoError])
 
   const getRarityColor = (rarity: string) => {
     switch (rarity) {
@@ -101,16 +140,17 @@ export const NFTListingCard: React.FC<NFTListingCardProps> = ({
     }
   }
 
-  const formatTimeRemaining = (expiresAt: number) => {
+  const formatTimeRemaining = (expiresAt: number | bigint) => {
     const now = Math.floor(Date.now() / 1000)
-    const remaining = expiresAt - now
-    
+    const expiresAtNumber = typeof expiresAt === 'bigint' ? Number(expiresAt) : expiresAt
+    const remaining = expiresAtNumber - now
+
     if (remaining <= 0) return '已过期'
-    
+
     const days = Math.floor(remaining / (24 * 60 * 60))
     const hours = Math.floor((remaining % (24 * 60 * 60)) / (60 * 60))
     const minutes = Math.floor((remaining % (60 * 60)) / 60)
-    
+
     if (days > 0) return `${days}天${hours}小时`
     if (hours > 0) return `${hours}小时${minutes}分钟`
     return `${minutes}分钟`
@@ -120,7 +160,7 @@ export const NFTListingCard: React.FC<NFTListingCardProps> = ({
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`
   }
 
-  const isExpired = Math.floor(Date.now() / 1000) > listing.expiresAt
+  const isExpired = Math.floor(Date.now() / 1000) > (typeof listing.expiresAt === 'bigint' ? Number(listing.expiresAt) : listing.expiresAt)
   const isOwner = address?.toLowerCase() === listing.seller.toLowerCase()
   const canBuy = !isOwner && !isExpired && listing.status === 0
   const canCancel = isOwner && listing.status === 0
