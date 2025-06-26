@@ -6,6 +6,7 @@ bin
 artifacts
 cache
 src/client/dist
+**/node_modules
 
 # 环境变量文件（包含敏感信息）
 .env
