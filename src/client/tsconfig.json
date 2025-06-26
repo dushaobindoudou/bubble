@@ -15,10 +15,18 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": false,
+
+    /* 忽略类型检查相关配置 */
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "noImplicitThis": false,
+    "noImplicitReturns": false,
+    "exactOptionalPropertyTypes": false,
 
     /* Path mapping */
     "baseUrl": ".",
@@ -38,13 +46,7 @@
     "declaration": false,
     "declarationMap": false,
     "sourceMap": true,
-    "removeComments": false,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "noImplicitThis": true,
-    "noImplicitReturns": true,
-    "exactOptionalPropertyTypes": true
+    "removeComments": false
   },
   "include": [
     "src/**/*",

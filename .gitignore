@@ -5,6 +5,7 @@ client/bower_components
 bin
 artifacts
 cache
+src/client/dist
 
 # 环境变量文件（包含敏感信息）
 .env
