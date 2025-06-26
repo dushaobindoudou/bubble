@@ -13,7 +13,7 @@ import { ManagerPage } from './pages/ManagerPage'
 import { Store } from './components/pages/Store'
 
 // Utility functions
-import { initializeLegacyGame } from './utils/gameIntegration'
+// import { initializeLegacyGame } from './utils/gameIntegration'
 
 const App: React.FC = () => {
   const { isAuthenticated, isLoading, session } = useAuth()
@@ -23,7 +23,7 @@ const App: React.FC = () => {
   useEffect(() => {
     if (location.pathname === '/game' && isAuthenticated) {
       // Initialize the legacy game integration
-      initializeLegacyGame(session)
+    //   initializeLegacyGame(session)
     }
   }, [location.pathname, isAuthenticated, session])
 
@@ -105,6 +105,8 @@ const App: React.FC = () => {
             path="/demo"
             element={<BubbleDemo />}
           />
+
+
 
           {/* Root redirect */}
           <Route

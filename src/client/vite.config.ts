@@ -21,7 +21,7 @@ export default defineConfig({
 
   // Development server configuration
   server: {
-    port: 3000,
+    port: 3003,
     host: true,
     // Proxy configuration for backend API calls
     proxy: {
@@ -31,9 +31,16 @@ export default defineConfig({
         secure: false,
       },
       '/ws': {
-        target: 'ws://localhost:8080',
+        target: 'ws://127.0.0.1:3000',
         ws: true,
         changeOrigin: true,
+      },
+      // Game server proxy
+      '/socket.io': {
+        target: 'ws://127.0.0.1:3000',
+        ws: true,
+        changeOrigin: true,
+        secure: false,
       },
     },
   },
